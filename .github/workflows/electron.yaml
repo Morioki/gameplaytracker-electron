@@ -1,0 +1,49 @@
+name: Electron CI
+
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+  pull-request:
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: ubuntu-latest
+        node: [8.x, 10.x, 12.x]
+
+    name: ${{ matrix.os }} Build and Test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+          
+      - name: Get npm cache directory
+        id: npm-cache
+        run: |
+          echo "::set-output name=dir::$(npm config get cache)"
+      
+      - uses: actions/cache@v1
+        with:
+        path: ${{ steps.npm-cache.outputs.dir }}
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+      # Does npm ci work when using cache
+      - name: Application Install
+        run: npm ci
+        
+      - nane: Test Suite
+        run: npm test
