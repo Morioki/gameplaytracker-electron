@@ -16,6 +16,7 @@ jobs:
           paths:
             - ./node_modules
   test:
+    working_directory: ~/GameplayTracker/Electron
     docker:
       - image: circleci/node:10.16
     steps:
@@ -23,6 +24,7 @@ jobs:
           name: test
           command: npm test
   distribute:
+    working_directory: ~/GameplayTracker/Electron
     docker:
       - image: circleci/node:10.16
     steps:
