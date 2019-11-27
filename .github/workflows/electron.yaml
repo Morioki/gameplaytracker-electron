@@ -52,7 +52,7 @@ jobs:
         if: always()
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        uses: Ilshidur/action-discord@v0.1
+        uses: Ilshidur/action-discord@0.1.0
         with:
           args: '${{ github.workflow }} build on commit ${{ github.sha }}: ${{ job.status }}'
         
