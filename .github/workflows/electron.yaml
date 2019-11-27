@@ -18,7 +18,7 @@ jobs:
         os: [ubuntu-16.04, ubuntu-18.04]
         node: [8.x, 10.x, 12.x]
 
-    name: ${{ matrix.os }} Build and Test
+    name: ${{ matrix.os }} - Node ${{ matrix.node }} Build and Test
 
     steps:
       - name: Checkout
@@ -47,3 +47,12 @@ jobs:
         
       - name: Test Suite
         run: npm test
+
+      - name: Discord Notification
+        if: always()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: "Ilshidur/actions/discord@8579fb6"
+        with:
+          args: '${{ github.workflow }} build on commit ${{ github.sha }}: ${{ job.status }}'
+        
