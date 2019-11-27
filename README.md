@@ -1,4 +1,5 @@
 # Gameplay Tracker
+![](https://github.com/Morioki/gameplaytracker-electron/workflows/Electron%20CI/badge.svg)
 
 > The best app ever
 
@@ -46,5 +47,5 @@ $ npm run release
 ---
 
 
-## Acknowledgements
+## Credits
 Package built on top of Sindre Sorhus' [Electron Boilerplate](https://github.com/sindresorhus/electron-boilerplate)
