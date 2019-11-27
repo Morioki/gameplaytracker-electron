@@ -45,5 +45,5 @@ jobs:
       - name: Application Install
         run: npm ci
         
-      - nane: Test Suite
+      - name: Test Suite
         run: npm test
