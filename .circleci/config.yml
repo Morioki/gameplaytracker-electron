@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 jobs:
   build:
     working_directory: ~/GameplayTracker/Electron
@@ -15,9 +15,31 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
+  test:
+    docker:
+      - image: circleci/node:10.16
+    steps:
       - run:
           name: test
           command: npm test
-#      - run:
-#        name: distribution
-#        command: npm run dist
+  distribute:
+    docker:
+      - image: circleci/node:10.16
+    steps:
+      - run:
+        name: distribution
+        command: npm run dist
+
+workflows:
+  version: 2
+  Build_And_Test:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only:
+#                - master
+                - develop
+      - test:
+          requires:
+            - build
