@@ -1,7 +1,7 @@
 # Gameplay Tracker
 ![](https://github.com/Morioki/gameplaytracker-electron/workflows/Electron%20CI/badge.svg)
 
-> The best app ever
+> A simple electron application to track game play sessions
 
 
 ## Install
