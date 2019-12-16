@@ -1,6 +1,7 @@
 'use strict';
 const path = require('path');
 const {app, BrowserWindow, Menu} = require('electron');
+const windowStateKeeper = require('electron-window-state')
 /// const {autoUpdater} = require('electron-updater');
 const {is} = require('electron-util');
 const unhandled = require('electron-unhandled');
@@ -31,11 +32,25 @@ app.setAppUserModelId(packageJson.build.appId);
 let mainWindow;
 
 const createMainWindow = async () => {
+
+	// Win State Keeper
+	let state = windowStateKeeper({
+		defaultWidth: 600, defaultHeight: 400
+	})
+
 	const win = new BrowserWindow({
 		title: app.name,
 		show: false,
-		width: 600,
-		height: 400
+		x: state.x,
+		y: state.y,
+		width: state.width,
+		height: state.height,
+		minWidth: 350,
+		maxWidth: 1000,
+		minHeight: 300,
+		webPreferences: { 
+			nodeIntegration: true
+		}
 	});
 
 	win.on('ready-to-show', () => {
@@ -48,7 +63,10 @@ const createMainWindow = async () => {
 		mainWindow = undefined;
 	});
 
-	await win.loadFile(path.join(__dirname, 'src/index.html'));
+	await win.loadFile(path.join(__dirname, 'src/landing/landing.html'));
+
+	// Manage new window state
+	state.manage(win)
 
 	return win;
 };
