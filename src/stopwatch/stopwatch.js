@@ -1,4 +1,4 @@
- function Stopwatch (display, results) {
+function Stopwatch(display, results) {
 	// Properties
 	this.running = false;
 	this.display = display;
@@ -37,9 +37,9 @@
 
 	this.clear = () => {
 		clearChildren(this.results);
-		this.stop()
+		this.stop();
 		this.reset();
-		this.print()
+		this.print();
 	};
 
 	this.step = timestamp => {
@@ -81,7 +81,7 @@
 	};
 
 	this.print();
-};
+}
 
 function pad0(value, count) {
 	let result = value.toString();

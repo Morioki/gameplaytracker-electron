@@ -1,12 +1,12 @@
 const stubData = require('../stub-data');
-const stopwatch = require('../stopwatch/stopwatch')
+const Stopwatch = require('../stopwatch/stopwatch');
 
 // DOM Elemenets
 const gameSelector = document.querySelector('#game-selector');
 const swStart = document.querySelector('#sw-start');
 const swStop = document.querySelector('#sw-stop');
 const swClear = document.querySelector('#sw-clear');
-const recordSave = document.querySelector('#record-save')
+const recordSave = document.querySelector('#record-save');
 
 // Load Game Selector
 const games = stubData.gameList;
@@ -30,20 +30,22 @@ games.forEach(game => {
 });
 
 // Build Stopwatch
-let sw = new stopwatch(
+const sw = new Stopwatch(
 	document.querySelector('.stopwatch'),
 	document.querySelector('.results')
 );
 
 swStart.addEventListener('click', sw.start);
 swStop.addEventListener('click', sw.stop);
-swClear.addEventListener('click', sw.clear)
+swClear.addEventListener('click', sw.clear);
 
 // Save Handler
 recordSave.addEventListener('click', e => {
 	console.log(gameSelector.options[gameSelector.selectedIndex].value);
 	console.log(gameSelector.options[gameSelector.selectedIndex].dataset.franchise);
-})
+
+	console.log(e);
+});
 
 console.log('Play Session Loaded');
 
