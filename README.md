@@ -1,5 +1,5 @@
 # Gameplay Tracker
-![](https://github.com/Morioki/gameplaytracker-electron/workflows/Electron%20CI/badge.svg)
+![Build Status](https://github.com/Morioki/gameplaytracker-electron/workflows/Electron%20CI/badge.svg) ![GitHub](https://img.shields.io/github/license/morioki/gameplaytracker-electron)
 
 > A simple electron application to track game play sessions
 
