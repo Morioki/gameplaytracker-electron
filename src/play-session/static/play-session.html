@@ -7,13 +7,28 @@
     <title>Game Session</title>
 </head>
 <body>
-    <div class="container">
-        <header></header>
-        <section class="main">
+    <header></header>
+    <main>
+        <div class="games">
+            <label for="game-selector">Game: </label>
+            <select id="game-selector"></select>
+        </div>
+        
+        <div class="controls">
+            <button id="sw-start">Start</button>
+            <button id="sw-stop">Stop</button>
+            <button id="sw-clear">Clear</button>
+        </div>
+        
+        <div class="stopwatch"></div>
+        
+        <ul class="results"></ul>
 
-        </section>
-        <footer></footer>
-    </div>
+        <div class="save">
+            <button id="record-save">Save</button>
+        </div>
+    </main>
+    <footer></footer>
     <script>require('../play-session')</script>
 </body>
 </html>

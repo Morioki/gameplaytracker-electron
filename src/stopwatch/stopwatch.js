@@ -1,4 +1,4 @@
-module.exports = (display, results) => {
+ function Stopwatch (display, results) {
 	// Properties
 	this.running = false;
 	this.display = display;
@@ -36,7 +36,10 @@ module.exports = (display, results) => {
 	};
 
 	this.clear = () => {
-		clearChildren(this.result);
+		clearChildren(this.results);
+		this.stop()
+		this.reset();
+		this.print()
 	};
 
 	this.step = timestamp => {
@@ -76,6 +79,8 @@ module.exports = (display, results) => {
 			${pad0(times[1], 2)}:\
 			${pad0(Math.floor(times[2]), 2)}`;
 	};
+
+	this.print();
 };
 
 function pad0(value, count) {
@@ -93,3 +98,5 @@ function clearChildren(node) {
 		node.removeChild(node.lastChild);
 	}
 }
+
+module.exports = Stopwatch;
