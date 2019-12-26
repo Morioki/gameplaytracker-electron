@@ -14,22 +14,22 @@ const gameNote = document.querySelector('#game-note-value');
 const gameSafe = document.querySelector('#game-save');
 
 gameSafe.addEventListener('click', e => {
-    const gameRecord = {
-        gameId: gameId.textContent,
-        gameTitle: gameTitle.value,
-        gameReleaseYear: gameReleaseYear.value,
-        gamePlatform: gamePlatform.value,
-        gameGenre: gameGenre.value,
-        gameDeveloper: gameDeveloper.value,
-        gamePublisher: gamePublisher.value,
-        gameFranchise: gameFranchise.value,
-        gameSeries: gameSeries.value,
-        gameNote: gameNote.value
-    }
-    console.log(gameRecord);
-    console.log('Data Saved');
+	const gameRecord = {
+		gameId: gameId.textContent,
+		gameTitle: gameTitle.value,
+		gameReleaseYear: gameReleaseYear.value,
+		gamePlatform: gamePlatform.value,
+		gameGenre: gameGenre.value,
+		gameDeveloper: gameDeveloper.value,
+		gamePublisher: gamePublisher.value,
+		gameFranchise: gameFranchise.value,
+		gameSeries: gameSeries.value,
+		gameNote: gameNote.value
+	}
+	console.log(gameRecord);
+	console.log('Data Saved');
 
-    console.log(e);
+	console.log(e);
 })
 
 console.log('Game Record Loaded');

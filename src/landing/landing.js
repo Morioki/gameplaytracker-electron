@@ -1,6 +1,8 @@
 // DOM Nodes
 const playSession = document.querySelector('#play-session');
 const gameRecord = document.querySelector('#game-record');
+const gameList = document.querySelector('#game-list');
+const playSessionList = document.querySelector('#play-session-list');
 
 // Open new session window
 playSession.addEventListener('click', e => {
@@ -31,4 +33,34 @@ gameRecord.addEventListener('click', e => {
 	// Remove at end
 	console.log(e);
 	console.log(gameRecordWindow)
+})
+
+gameList.addEventListener('click', e => {
+	const gameListWindow = window.open('../game-list/static/game-list.html', '', `
+		maxWidth=2000,
+		maxHeight=2000,
+		width=600,
+		height=800,
+		backgroundColor=#DEDEDE,
+		nodeIntegration=1
+	`);
+
+	// Remove at end
+	console.log(e);
+	console.log(gameListWindow)
+})
+
+playSessionList.addEventListener('click', e => {
+	const playSessionListWindow = window.open('../play-session-list/static/play-session-list.html', '', `
+		maxWidth=2000,
+		maxHeight=2000,
+		width=600,
+		height=800,
+		backgroundColor=#DEDEDE,
+		nodeIntegration=1
+	`);
+
+	// Remove at end
+	console.log(e);
+	console.log(playSessionListWindow)
 })
