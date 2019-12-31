@@ -1,5 +1,3 @@
-const stubData = require('../stub-data');
-
 // DOM Elements
 const gameId = document.querySelector('#game-id-value');
 const gameTitle = document.querySelector('#game-title-value');
@@ -25,11 +23,11 @@ gameSafe.addEventListener('click', e => {
 		gameFranchise: gameFranchise.value,
 		gameSeries: gameSeries.value,
 		gameNote: gameNote.value
-	}
+	};
 	console.log(gameRecord);
 	console.log('Data Saved');
 
 	console.log(e);
-})
+});
 
 console.log('Game Record Loaded');

@@ -1,14 +1,29 @@
-const { DateTime } = require('luxon');
+const {DateTime} = require('luxon');
 const stubData = require('../stub-data');
 
 // DOM elements
 const createNew = document.querySelector('#create-new');
 const playSessionList = document.querySelector('.play-session-list');
 
-
 // Load Play Session List Selector
 const playSessions = stubData.playSessionList;
-const gameList = stubData.gameList
+const gameDataList = stubData.gameList;
+
+// Launch new session window
+createNew.addEventListener('click', e => {
+	const playSessionWindow = window.open('../../play-session/static/play-session.html', '', `
+		maxWidth=600,
+		maxHeight=600,
+		width=300,
+		height=400,
+		backgroundColor=#DEDEDE,
+		nodeIntegration=1
+	`);
+
+	// Remove at end
+	console.log(e);
+	console.log(playSessionWindow);
+});
 
 playSessions.forEach(sesh => {
 	// TODO Add rendering of each data element
@@ -20,7 +35,7 @@ playSessions.forEach(sesh => {
 	const dropDownDiv = document.createElement('div');
 
 	// Get Game Record for play Session
-	const gameData = gameList.find(game => game.gameId === sesh.gameId)
+	const gameData = gameDataList.find(game => game.gameId === sesh.gameId);
 
 	sessionItem.classList.add('session-item');
 	dateSpan.classList.add('date-played');
@@ -30,8 +45,8 @@ playSessions.forEach(sesh => {
 
 	nameSpan.textContent = gameData.gameTitle;
 	dateSpan.textContent = sesh.startDate;
-	
-	const hours = Math.round(Math.abs((DateTime.fromSQL(sesh.startDate) - DateTime.fromSQL(sesh.endDate)) / 3.6e6) * 100 + Number.EPSILON) / 100;
+
+	const hours = Math.round(Math.abs(((DateTime.fromSQL(sesh.startDate) - DateTime.fromSQL(sesh.endDate)) / 3.6e6) * 100) + Number.EPSILON) / 100;
 
 	timePlayedSpan.textContent = hours;
 
@@ -60,22 +75,21 @@ playSessions.forEach(sesh => {
 			backgroundColor=#DEDEDE,
 			nodeIntegration=1
 		`);
-	
+
 		// TODO Add Ipc Messaging to pass the selected item data to the new window
 
 		// Remove at end
-		console.log(gameItem.dataset.gameId);
 		console.log(e);
-		console.log(gameRecordWindow)
+		console.log(gameSessionWindow);
 	});
 
 	const del = document.createElement('a');
 	del.href = '#';
 	del.textContent = 'Delete';
 	del.addEventListener('click', e => {
-		console.log('Deleted')
+		console.log('Deleted');
 		console.log(e);
-	})
+	});
 
 	dropDownDiv.append(ddButton);
 	ddItems.append(edit);
@@ -85,9 +99,8 @@ playSessions.forEach(sesh => {
 	sessionItem.append(dateSpan);
 	sessionItem.append(subDataDiv);
 	sessionItem.append(dropDownDiv);
-	
+
 	playSessionList.append(sessionItem);
 });
 
-
-console.log('Play Session List Loaded')
+console.log('Play Session List Loaded');

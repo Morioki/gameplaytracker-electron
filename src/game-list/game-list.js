@@ -17,7 +17,7 @@ createNew.addEventListener('click', e => {
 
 	// Remove at end
 	console.log(e);
-	console.log(gameRecordWindow)
+	console.log(gameRecordWindow);
 });
 
 // Load Game Selector
@@ -82,16 +82,16 @@ games.forEach(game => {
 		// Remove at end
 		console.log(gameItem.dataset.gameId);
 		console.log(e);
-		console.log(gameRecordWindow)
+		console.log(gameRecordWindow);
 	});
 
 	const del = document.createElement('a');
 	del.href = '#';
 	del.textContent = 'Delete';
 	del.addEventListener('click', e => {
-		console.log('Deleted')
+		console.log('Deleted');
 		console.log(e);
-	})
+	});
 
 	dropDownDiv.append(ddButton);
 	ddItems.append(edit);
@@ -101,10 +101,10 @@ games.forEach(game => {
 	gameItem.append(nameSpan);
 	gameItem.append(subDataDiv);
 	gameItem.append(dropDownDiv);
-	
+
 	gameList.append(gameItem);
 });
 
 console.log(createNew);
 console.log(gameList);
-console.log('Game List Loaded')
+console.log('Game List Loaded');

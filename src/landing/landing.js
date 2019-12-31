@@ -33,8 +33,8 @@ gameRecord.addEventListener('click', e => {
 
 	// Remove at end
 	console.log(e);
-	console.log(gameRecordWindow)
-})
+	console.log(gameRecordWindow);
+});
 
 gameList.addEventListener('click', e => {
 	const gameListWindow = window.open('../game-list/static/game-list.html', '', `
@@ -48,8 +48,8 @@ gameList.addEventListener('click', e => {
 
 	// Remove at end
 	console.log(e);
-	console.log(gameListWindow)
-})
+	console.log(gameListWindow);
+});
 
 playSessionList.addEventListener('click', e => {
 	const playSessionListWindow = window.open('../play-session-list/static/play-session-list.html', '', `
@@ -63,8 +63,8 @@ playSessionList.addEventListener('click', e => {
 
 	// Remove at end
 	console.log(e);
-	console.log(playSessionListWindow)
-})
+	console.log(playSessionListWindow);
+});
 
 dbTest.addEventListener('click', e => {
 	const dbWindow = window.open('../db/test-db.html', '', `
@@ -79,4 +79,4 @@ dbTest.addEventListener('click', e => {
 	// Remove at end
 	console.log(e);
 	console.log(dbWindow);
-})
+});

@@ -24,6 +24,6 @@ const gameSchema = new mongoose.Schema({
 	image_path: String,
 	game_note: String
 });
-gameSchema.plugin(AutoIncrement, { id: 'game.game_id', inc_field: 'game_id', collection_name: 'sequences'});
+gameSchema.plugin(AutoIncrement, {id: 'game.game_id', inc_field: 'game_id', collection_name: 'sequences'});
 
 module.exports = mongoose.model('Game', gameSchema);

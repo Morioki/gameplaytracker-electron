@@ -46,7 +46,8 @@
 			"browser"
 		],
 		"ignores": [
-			"test"
+			"test",
+			"src/db/models"
 		]
 	},
 	"np": {
