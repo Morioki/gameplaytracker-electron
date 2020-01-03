@@ -1,3 +1,4 @@
+'use strict';
 const stubData = require('../stub-data');
 
 // DOM elements
@@ -23,26 +24,40 @@ createNew.addEventListener('click', e => {
 // Load Game Selector
 const games = stubData.gameList;
 
-games.forEach(game => {
+games.forEach((game, index) => {
 	const gameItem = document.createElement('div');
+	const indexSpan = document.createElement('span');
 	const nameSpan = document.createElement('span');
-	const subDataDiv = document.createElement('div');
 	const platformSpan = document.createElement('span');
 	const releaseYearSpan = document.createElement('span');
 	const dropDownDiv = document.createElement('div');
 
 	gameItem.classList.add('game-item');
-	nameSpan.classList.add('game-title');
-	subDataDiv.classList.add('game-subdata');
-	platformSpan.classList.add('platform');
-	releaseYearSpan.classList.add('release-year');
+	gameItem.classList.add('row');
+	gameItem.classList.add('p-1');
 
+	indexSpan.classList.add('game-index');
+	indexSpan.classList.add('col-1');
+	indexSpan.classList.add('align-middle');
+
+	nameSpan.classList.add('game-title');
+	nameSpan.classList.add('col-5');
+	nameSpan.classList.add('align-middle');
+
+	platformSpan.classList.add('game-subdata');
+	platformSpan.classList.add('platform');
+	platformSpan.classList.add('col');
+	platformSpan.classList.add('align-middle');
+
+	releaseYearSpan.classList.add('game-subdata');
+	releaseYearSpan.classList.add('release-year');
+	releaseYearSpan.classList.add('col');
+	releaseYearSpan.classList.add('align-middle');
+
+	indexSpan.textContent = index + 1;
 	nameSpan.textContent = game.gameTitle;
 	platformSpan.textContent = game.platform;
 	releaseYearSpan.textContent = game.releaseYear;
-
-	subDataDiv.append(platformSpan);
-	subDataDiv.append(releaseYearSpan);
 
 	gameItem.dataset.gameId = game.gameId;
 	gameItem.dataset.platform = game.platform;
@@ -55,16 +70,24 @@ games.forEach(game => {
 	gameItem.dataset.gameNote = game.gameNote;
 
 	// Build Dropdown Menu
-	dropDownDiv.classList.add('dropdown');
+	dropDownDiv.classList.add('btn-group');
+	dropDownDiv.classList.add('dropleft');
+	dropDownDiv.classList.add('col');
 
 	const ddButton = document.createElement('button');
-	ddButton.classList.add('dropbtn');
-	ddButton.textContent = '+';
+	ddButton.classList.add('btn');
+	ddButton.classList.add('btn-secondary');
+	ddButton.classList.add('dropdown-toggle');
+	ddButton.type = 'button'
+	ddButton.dataset.toggle = 'dropdown'
+	ddButton.setAttribute('aria-haspopup', 'true');
+	ddButton.setAttribute('aria-expanded', 'false');
 
 	const ddItems = document.createElement('div');
-	ddItems.classList.add('dropdown-content');
+	ddItems.classList.add('dropdown-menu');
 
 	const edit = document.createElement('a');
+	edit.classList.add('dropdown-item');
 	edit.href = '#';
 	edit.textContent = 'Edit';
 	edit.addEventListener('click', e => {
@@ -86,6 +109,7 @@ games.forEach(game => {
 	});
 
 	const del = document.createElement('a');
+	del.classList.add('dropdown-item');
 	del.href = '#';
 	del.textContent = 'Delete';
 	del.addEventListener('click', e => {
@@ -98,8 +122,10 @@ games.forEach(game => {
 	ddItems.append(del);
 	dropDownDiv.append(ddItems);
 
+	gameItem.append(indexSpan);
 	gameItem.append(nameSpan);
-	gameItem.append(subDataDiv);
+	gameItem.append(platformSpan);
+	gameItem.append(releaseYearSpan);
 	gameItem.append(dropDownDiv);
 
 	gameList.append(gameItem);
