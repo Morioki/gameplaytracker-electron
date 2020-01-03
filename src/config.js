@@ -3,6 +3,15 @@ const Store = require('electron-store');
 
 module.exports = new Store({
 	defaults: {
-		favoriteAnimal: '🦄'
+		favoriteAnimal: '🦄',
+		databases: {
+			mongodb: {
+				host: 'localhost',
+				port: 27017,
+				username: 'username',
+				password: 'password',
+				authentication_source: 'admin'
+			}
+		}
 	}
 });
