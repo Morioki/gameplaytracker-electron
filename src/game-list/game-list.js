@@ -1,4 +1,8 @@
 'use strict';
+const {BrowserWindow} = require('electron').remote;
+const {ipcRenderer} = require('electron');
+const windowStateKeeper = require('electron-window-state');
+
 const stubData = require('../stub-data');
 
 // DOM elements
@@ -7,18 +11,35 @@ const gameList = document.querySelector('.game-list');
 
 // Launch new game window
 createNew.addEventListener('click', e => {
-	const gameRecordWindow = window.open('../../game-record/static/game-record.html', '', `
-		maxWidth=600,
-		maxHeight=600,
-		width=300,
-		height=400,
-		backgroundColor=#DEDEDE,
-		nodeIntegration=1
-	`);
+	// TODO Prevent Garbage Collection
+	const state = windowStateKeeper({
+		defaultWidth: 300, defaultHeight: 400
+	});
+
+	const gameRecordWindow = new BrowserWindow({
+		parent: require('electron').remote.getCurrentWindow(),
+		modal: true,
+		show: false,
+		x: state.x,
+		y: state.y,
+		width: state.width,
+		height: state.height,
+		minWidth: 300,
+		maxWidth: 1000,
+		minHeight: 400,
+		backgroundColor: '#DEDEDE',
+		webPreferences: {nodeIntegration: true}
+	})
+	gameRecordWindow.loadFile('./src/game-record/static/game-record.html')
+	gameRecordWindow.once('ready-to-show', () => {
+		gameRecordWindow.show();
+	});
+
+	state.manage(gameRecordWindow);
 
 	// Remove at end
 	console.log(e);
-	console.log(gameRecordWindow);
+	console.log(gameRecordWindow.id);
 });
 
 // Load Game Selector
@@ -60,6 +81,7 @@ games.forEach((game, index) => {
 	releaseYearSpan.textContent = game.releaseYear;
 
 	gameItem.dataset.gameId = game.gameId;
+	gameItem.dataset.title = game.gameTitle;
 	gameItem.dataset.platform = game.platform;
 	gameItem.dataset.genre = game.genre;
 	gameItem.dataset.releaseYear = game.releaseYear;
@@ -91,21 +113,31 @@ games.forEach((game, index) => {
 	edit.href = '#';
 	edit.textContent = 'Edit';
 	edit.addEventListener('click', e => {
-		const gameRecordWindow = window.open('../../game-record/static/game-record.html', '', `
-			maxWidth=600,
-			maxHeight=600,
-			width=300,
-			height=400,
-			backgroundColor=#DEDEDE,
-			nodeIntegration=1
-		`);
-
-		// TODO Add Ipc Messaging to pass the selected item data to the new window
-
-		// Remove at end
-		console.log(gameItem.dataset.gameId);
-		console.log(e);
-		console.log(gameRecordWindow);
+		const state = windowStateKeeper({
+			defaultWidth: 300, defaultHeight: 400
+		});
+	
+		const gameRecordWindow = new BrowserWindow({
+			parent: require('electron').remote.getCurrentWindow(),
+			modal: true,
+			show: false,
+			x: state.x,
+			y: state.y,
+			width: state.width,
+			height: state.height,
+			minWidth: 300,
+			maxWidth: 1000,
+			minHeight: 400,
+			backgroundColor: '#DEDEDE',
+			webPreferences: {nodeIntegration: true}
+		})
+		gameRecordWindow.loadFile('./src/game-record/static/game-record.html')
+		gameRecordWindow.once('ready-to-show', () => {
+			ipcRenderer.sendTo(gameRecordWindow.webContents.id, 'dataForGameRecord', Object.assign({gameRecordWindow}, gameItem.dataset));
+			gameRecordWindow.show();
+		});
+	
+		state.manage(gameRecordWindow);
 	});
 
 	const del = document.createElement('a');

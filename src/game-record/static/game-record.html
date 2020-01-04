@@ -16,48 +16,120 @@
 <body>
     <header></header>
     <main>
-        <div class="game-id">
-            <span id="game-id-label">Game ID: </span>  
-            <span id="game-id-value">N/A</span>
+        <div class="container-fluid">
+            <div class="row p-1">
+                <div class="col">
+                    <div class="game-id">
+                        <span id="game-id-label">Game ID: </span>  
+                        <span id="game-id-value">N/A</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col">
+                    <div class="game-title input-group input-group-sm mb-1">
+                        <!-- <label for="game-title-value">Game Title</label> -->
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Game Title</span>
+                        </div>
+                        <input type="text" class="form-control" name="game-title-name" id="game-title-value">
+                    </div>
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col">
+                    <div class="game-release-year input-group input-group-sm mb-1">
+                        <!-- <label for="game-release-year-value">Release Year</label> -->
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="game-release-year-value">Release Year</span>
+                        </div>
+                        <input type="date" class="form-control" name="game-release-year-name" id="game-release-year-value">
+                    </div>
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col">
+                    <div class="game-platform input-group input-group-sm mb-1">
+                        <!-- <label for="game-platform-value">Platform</label> -->
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="game-platform-value">Platform</span>
+                        </div>
+                        <input type="text" class="form-control" name="game-platform-name" id="game-platform-value">
+                    </div>
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col">
+                    <div class="game-genre input-group input-group-sm mb-1">
+                        <!-- <label for="game-genre-value">Genre</label> -->
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="game-genre-value">Genre</span>
+                        </div>
+                        <input type="text" class="form-control" name="game-genre-name" id="game-genre-value">
+                    </div>
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col">
+                    <div class="game-developer input-group input-group-sm mb-1">
+                        <!-- <label for="game-developer-value">Developer: </label> -->
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="game-developer-value">Developer</span>
+                        </div>
+                        <input type="text" class="form-control" name="game-developer-name" id="game-developer-value">
+                    </div>
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col">
+                    <div class="game-publisher input-group input-group-sm mb-1">
+                        <!-- <label for="game-publisher-value">Publisher: </label> -->
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="game-publisher-value">Publisher</span>
+                        </div>
+                        <input type="text" class="form-control" name="game-publisher-name" id="game-publisher-value">
+                    </div>
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col">
+                    <div class="game-franchise input-group input-group-sm mb-1">
+                        <!-- <label for="game-franchise-value">Franchise: </label> -->
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="game-franchise-value">Franchise</span>
+                        </div>
+                        <input type="text" class="form-control" name="game-franchise-name" id="game-franchise-value">
+                    </div>
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col">
+                    <div class="game-series input-group input-group-sm mb-1">
+                        <!-- <label for="game-series-value">Series: </label> -->
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="game-series-value">Series</span>
+                        </div>
+                        <input type="text" class="form-control" name="game-series-name" id="game-series-value">
+                    </div>
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col">
+                    <div class="game-note input-group input-group-sm mb-1">
+                        <!-- <label for="game-note-value">Notes: </label> -->
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="game-note-value">Notes</span>
+                        </div>
+                        <textarea class="form-control" name="game-note-name" id="game-note-value"></textarea class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col">
+                    <button class="btn btn-secondary float-right" id="game-save">Save</button>
+                </div>
+            </div>
         </div>
-        <div class="game-title">
-            <label for="game-title-value">Game Title: </label>
-            <input type="text" name="game-title-name" id="game-title-value">
-        </div>
-        <div class="game-release-year">
-            <label for="game-release-year-value">Release Year: </label>
-            <input type="date" name="game-release-year-name" id="game-release-year-value">
-        </div>
-        <div class="game-platform">
-            <label for="game-platform-value">Platform: </label>
-            <input type="text" name="game-platform-name" id="game-platform-value">
-        </div>
-        <div class="game-genre">
-            <label for="game-genre-value">Genre: </label>
-            <input type="text" name="game-genre-name" id="game-genre-value">
-        </div>
-        <div class="game-developer">
-            <label for="game-developer-value">Developer: </label>
-            <input type="text" name="game-developer-name" id="game-developer-value">
-        </div>
-        <div class="game-publisher">
-            <label for="game-publisher-value">Publisher: </label>
-            <input type="text" name="game-publisher-name" id="game-publisher-value">
-        </div>
-        <div class="game-franchise">
-            <label for="game-franchise-value">Franchise: </label>
-            <input type="text" name="game-franchise-name" id="game-franchise-value">
-        </div>
-        <div class="game-series">
-            <label for="game-series-value">Series: </label>
-            <input type="text" name="game-series-name" id="game-series-value">
-        </div>
-        <div class="game-note">
-            <label for="game-note-value">Notes: </label>
-            <textarea name="game-note-name" id="game-note-value" cols="30" rows="10"></textarea>
-            <!-- <input type="text" name="game-note-name" id="game-note-value"> -->
-        </div>
-        <button id="game-save">Save</button>
     </main>
     <footer></footer>
     <script>require("../game-record")</script>

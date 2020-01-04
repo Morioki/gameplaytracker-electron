@@ -1,3 +1,5 @@
+const {ipcRenderer} = require('electron');
+
 // DOM Elements
 const gameId = document.querySelector('#game-id-value');
 const gameTitle = document.querySelector('#game-title-value');
@@ -29,5 +31,21 @@ gameSafe.addEventListener('click', e => {
 
 	console.log(e);
 });
+
+
+ipcRenderer.on('dataForGameRecord', (e, args) => {
+	console.log(args);
+
+	gameId.textContent = args.gameId;
+
+	console.log(args.title);
+	console.log(gameTitle.value);
+	gameTitle.value = args.title;
+
+	gameReleaseYear.value = args.releaseYear;
+	gamePlatform.value = args.platform;
+
+	console.log('All Data Loaded');
+})
 
 console.log('Game Record Loaded');
