@@ -37,14 +37,16 @@ ipcRenderer.on('dataForGameRecord', (e, args) => {
 	console.log(args);
 
 	gameId.textContent = args.gameId;
-
-	console.log(args.title);
-	console.log(gameTitle.value);
 	gameTitle.value = args.title;
-
 	gameReleaseYear.value = args.releaseYear;
 	gamePlatform.value = args.platform;
-
+	gameGenre.value = args.genre;
+	gameDeveloper.value = args.developer;
+	gamePublisher.value = args.publisher;
+	gameFranchise.value = args.franchise;
+	gameSeries.value = args.series;
+	gameNote.value = args.gameNote;
+	
 	console.log('All Data Loaded');
 })
 

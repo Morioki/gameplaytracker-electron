@@ -1,3 +1,6 @@
+'use strict';
+const {DateTime} = require('luxon');
+
 const stubData = require('../stub-data');
 const Stopwatch = require('../stopwatch/stopwatch');
 
@@ -35,15 +38,19 @@ const sw = new Stopwatch(
 	document.querySelector('.results')
 );
 
-swStart.addEventListener('click', sw.start);
-swStop.addEventListener('click', sw.stop);
+swStart.addEventListener('click', () => {
+	const startDate = new Date().toISOString().slice(0,19).replace('T', ' ');	
+	sw.start();
+	console.log(startDate);
+});
+swStop.addEventListener('click', () => {
+	sw.stop();
+	sw.calculate();
+});
 swClear.addEventListener('click', sw.clear);
 
 // Save Handler
 recordSave.addEventListener('click', e => {
-	console.log(gameSelector.options[gameSelector.selectedIndex].value);
-	console.log(gameSelector.options[gameSelector.selectedIndex].dataset.franchise);
-
 	console.log(e);
 });
 

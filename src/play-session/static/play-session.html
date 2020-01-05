@@ -16,23 +16,42 @@
 <body>
     <header></header>
     <main>
-        <div class="games">
-            <label for="game-selector">Game: </label>
-            <select id="game-selector"></select>
+        <div class="container-flow">
+            <div class="row p-1">
+                <div class="col">
+                    <div class="games input-group input-group-sm mb-1">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="game-selector">Game</label>
+                        </div>
+                        <select class="custom-select" id="game-selector"></select>
+                    </div>
+                </div>
+            </div>
         </div>
         
-        <div class="controls">
-            <button id="sw-start">Start</button>
-            <button id="sw-stop">Stop</button>
-            <button id="sw-clear">Clear</button>
+        
+        <div class="controls row p-1">
+            <div class="col">
+                <button class="btn btn-secondary form-control" id="sw-start">Start</button>
+            </div>
+            <div class="col">
+                <button class="btn btn-secondary form-control" id="sw-stop">Stop</button>`
+            </div>
+            <div class="col">
+                <button class="btn btn-secondary form-control" id="sw-clear">Clear</button>
+            </div>
         </div>
         
-        <div class="stopwatch"></div>
+        <div class="row">
+            <div class="stopwatch col display-3 text-center"></div>
+        </div>
         
         <ul class="results"></ul>
 
-        <div class="save">
-            <button id="record-save">Save</button>
+        <div class="save row">
+            <div class="col">
+                <button class="btn btn-secondary float-right" id="record-save">Save</button>
+            </div>
         </div>
     </main>
     <footer></footer>

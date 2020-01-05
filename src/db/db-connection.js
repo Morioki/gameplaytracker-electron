@@ -15,6 +15,6 @@ const mongoPass = store.get('databases.mongodb.password');
 const mongoAuthSrc = store.get('databases.mongodb.authentication_source');
 const mongoURI = `mongodb://${mongoUsername}:${mongoPass}@${mongoHost}:${mongoPort}/gameplay_tracker?authSource=${mongoAuthSrc}`
 
-mongoose.connect(mongoURI, {useNewUrlParser: true, useFindAndModify: false});
+mongoose.connect(mongoURI, {useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true});
 
 console.log('db-connection loaded');
