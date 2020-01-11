@@ -5,11 +5,11 @@ function Stopwatch(display, results) {
 	this.results = results;
 	this.laps = [];
 
-	this.times = [0, 0, 0];
+	this.times = [0, 0, 0, 0];
 
 	// Methods
 	this.reset = () => {
-		this.times = [0, 0, 0];
+		this.times = [0, 0, 0, 0];
 	};
 
 	this.start = () => {
@@ -23,12 +23,12 @@ function Stopwatch(display, results) {
 		}
 	};
 
-	this.lap = () => {
-		const {times} = this;
-		const li = document.createElement('li');
-		li.textContent = this.format(times);
-		this.results.append(li);
-	};
+	// this.lap = () => {
+	// 	const {times} = this;
+	// 	const li = document.createElement('li');
+	// 	li.textContent = this.format(times);
+	// 	this.results.append(li);
+	// };
 
 	this.stop = () => {
 		this.running = false;
@@ -37,7 +37,7 @@ function Stopwatch(display, results) {
 
 	this.clear = () => {
 		clearChildren(this.results);
-		this.stop();
+		if(this.running) this.stop();
 		this.reset();
 		this.print();
 	};
@@ -54,13 +54,20 @@ function Stopwatch(display, results) {
 	};
 
 	this.calculate = timestamp => {
+		if (!this.time)
+			return;
 		const diff = timestamp - this.time;
 
-		this.times[2] += diff / 10;
+		this.times[3] += diff / 10;
 
-		if (this.times[2] >= 100) {
+		if (this.times[3] >= 100) {
+			this.times[2] += 1;
+			this.times[3] -= 100;
+		}
+
+		if (this.times[2] >= 60) {
 			this.times[1] += 1;
-			this.times[2] -= 100;
+			this.times[2] -= 60;
 		}
 
 		if (this.times[1] >= 60) {
@@ -77,7 +84,18 @@ function Stopwatch(display, results) {
 		return `\
 			${pad0(times[0], 2)}:\
 			${pad0(times[1], 2)}:\
-			${pad0(Math.floor(times[2]), 2)}`;
+			${pad0(times[2], 2)}.\
+			${pad0(Math.floor(times[3]), 2)}`;
+	};
+
+	this.dumpTime = times => {
+		const hour = times[0];
+		const min = times[1];
+		const sec = times[2];
+		const milli = times[3];
+
+		const runningTime =	(((((hour * 60) + min) * 60) + sec) * 100) + milli;
+		return runningTime;
 	};
 
 	this.print();

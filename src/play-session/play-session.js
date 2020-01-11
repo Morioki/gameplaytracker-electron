@@ -16,18 +16,18 @@ const games = stubData.gameList;
 
 games.forEach(game => {
 	const optionEl = document.createElement('option');
-	optionEl.textContent = game.gameTitle;
-	optionEl.value = game.gameId;
+	optionEl.textContent = game.game_title;
+	optionEl.value = game.game_id;
 
 	// Load data elements
 	optionEl.dataset.platform = game.platform;
 	optionEl.dataset.genre = game.genre;
-	optionEl.dataset.releaseYear = game.releaseYear;
+	optionEl.dataset.releaseYear = game.release_year;
 	optionEl.dataset.developer = game.developer;
 	optionEl.dataset.publisher = game.publisher;
 	optionEl.dataset.franchise = game.franchise;
 	optionEl.dataset.series = game.series;
-	optionEl.dataset.gameNote = game.gameNote;
+	optionEl.dataset.gameNote = game.game_note;
 
 	gameSelector.append(optionEl);
 });
@@ -43,14 +43,16 @@ swStart.addEventListener('click', () => {
 	sw.start();
 	console.log(startDate);
 });
+
 swStop.addEventListener('click', () => {
 	sw.stop();
-	sw.calculate();
 });
+
 swClear.addEventListener('click', sw.clear);
 
 // Save Handler
 recordSave.addEventListener('click', e => {
+	console.log(sw.dumpTime(sw.times))
 	console.log(e);
 });
 

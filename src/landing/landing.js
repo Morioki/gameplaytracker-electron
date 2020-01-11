@@ -33,8 +33,4 @@ playSessionList.addEventListener('click', async e => {
 		backgroundColor=#DEDEDE,
 		nodeIntegration=1
 	`);
-
-	// Remove at end
-	console.log(e);
-	console.log(playSessionListWindow);
 });

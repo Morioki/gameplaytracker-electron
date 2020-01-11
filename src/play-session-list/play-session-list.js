@@ -9,25 +9,52 @@ const stubData = require('../stub-data');
 const createNew = document.querySelector('#create-new');
 const playSessionList = document.querySelector('.play-session-list');
 
-// Load Play Session List Selector
-const playSessions = stubData.playSessionList;
-const gameDataList = stubData.gameList;
+let playSessionWindow;
+
+const createPlaySessionWindow = async () => {
+	
+	const state = windowStateKeeper({
+		defaultWidth: 600, defaultHeight: 600
+	});
+
+	const win = new BrowserWindow({
+		parent: require('electron').remote.getCurrentWindow(),
+		modal: true,
+		show: false,
+		x: state.x,
+		y: state.y,
+		width: state.width,
+		height: state.height,
+		minWidth: 300,
+		maxWidth: 600,
+		maxHeight: 600,
+		backgroundColor:'#DEDEDE',
+		webPreferences: {nodeIntegration: true}
+	});
+
+	win.once('ready-to-show', () => {
+		win.show();
+	});
+
+	win.once('closed', () => {
+		playSessionWindow = undefined;
+	});
+
+	await win.loadFile('./src/play-session/static/play-session.html');
+
+	state.manage(win);
+
+	return win;
+};
 
 // Launch new session window
-createNew.addEventListener('click', e => {
-	const playSessionWindow = window.open('../../play-session/static/play-session.html', '', `
-		maxWidth=600,
-		maxHeight=600,
-		width=300,
-		height=400,
-		backgroundColor=#DEDEDE,
-		nodeIntegration=1
-	`);
-
-	// Remove at end
-	console.log(e);
-	console.log(playSessionWindow);
+createNew.addEventListener('click', async e => {
+	playSessionWindow = await createPlaySessionWindow();
 });
+
+// Load selectors
+const playSessions = stubData.playSessionList;
+const gameDataList = stubData.gameList;
 
 playSessions.forEach(sesh => {
 	const sessionItem = document.createElement('div');
@@ -37,7 +64,7 @@ playSessions.forEach(sesh => {
 	const dropDownDiv = document.createElement('div');
 
 	// Get Game Record for play Session
-	const gameData = gameDataList.find(game => game.gameId === sesh.gameId);
+	const gameData = gameDataList.find(game => game.game_id === sesh.game_id);
 
 	sessionItem.classList.add('session-item');
 	sessionItem.classList.add('row');
@@ -57,10 +84,10 @@ playSessions.forEach(sesh => {
 	timePlayedSpan.classList.add('col');
 	timePlayedSpan.classList.add('align-middle');
 
-	nameSpan.textContent = gameData.gameTitle;
-	dateSpan.textContent = DateTime.fromSQL(sesh.startDate).toLocaleString(DateTime.DATE_SHORT);
+	nameSpan.textContent = gameData.game_title;
+	dateSpan.textContent = DateTime.fromSQL(sesh.start_date).toLocaleString(DateTime.DATE_SHORT);
 
-	const hours = Math.round(Math.abs(((DateTime.fromSQL(sesh.startDate) - DateTime.fromSQL(sesh.endDate)) / 3.6e6) * 100) + Number.EPSILON) / 100;
+	const hours = Math.round(Math.abs(((DateTime.fromSQL(sesh.start_date) - DateTime.fromSQL(sesh.end_date)) / 3.6e6) * 100) + Number.EPSILON) / 100;
 
 	timePlayedSpan.textContent = hours;
 
@@ -86,20 +113,7 @@ playSessions.forEach(sesh => {
 	edit.href = '#';
 	edit.textContent = 'Edit';
 	edit.addEventListener('click', e => {
-		const gameSessionWindow = window.open('../../game-record/static/game-record.html', '', `
-			maxWidth=600,
-			maxHeight=600,
-			width=300,
-			height=400,
-			backgroundColor=#DEDEDE,
-			nodeIntegration=1
-		`);
-
-		// TODO Add Ipc Messaging to pass the selected item data to the new window
-
-		// Remove at end
-		console.log(e);
-		console.log(gameSessionWindow);
+		console.log('Edit Request');
 	});
 
 	const del = document.createElement('a');

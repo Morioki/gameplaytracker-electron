@@ -33,9 +33,9 @@ const createGameRecordWindow = async (gameItem) => {
 		webPreferences: {nodeIntegration: true}
 	})
 
-	win.once('ready-to-show', () => {
-		win.show();
-	});
+	// win.once('ready-to-show', () => {
+	// 	win.show();
+	// });
 
 	win.once('closed', () => {
 		gameRecordWindow = undefined;
