@@ -1,4 +1,7 @@
+'use strict';
 const {ipcRenderer} = require('electron');
+
+const dbConn = require('../db/db-connection');
 
 // DOM Elements
 const gameId = document.querySelector('#game-id-value');
@@ -11,41 +14,45 @@ const gamePublisher = document.querySelector('#game-publisher-value');
 const gameFranchise = document.querySelector('#game-franchise-value');
 const gameSeries = document.querySelector('#game-series-value');
 const gameNote = document.querySelector('#game-note-value');
-const gameSafe = document.querySelector('#game-save');
+const gameSave = document.querySelector('#game-save');
 
-gameSafe.addEventListener('click', e => {
+gameSave.addEventListener('click', async e => {
 	const gameRecord = {
-		gameId: gameId.textContent,
-		gameTitle: gameTitle.value,
-		gameReleaseYear: gameReleaseYear.value,
-		gamePlatform: gamePlatform.value,
-		gameGenre: gameGenre.value,
-		gameDeveloper: gameDeveloper.value,
-		gamePublisher: gamePublisher.value,
-		gameFranchise: gameFranchise.value,
-		gameSeries: gameSeries.value,
-		gameNote: gameNote.value
+		game_id: gameId.textContent,
+		game_title: gameTitle.value,
+		release_year: gameReleaseYear.value,
+		platform: gamePlatform.value,
+		genre: gameGenre.value,
+		developer: gameDeveloper.value,
+		publisher: gamePublisher.value,
+		franchise: gameFranchise.value,
+		series: gameSeries.value,
+		game_note: gameNote.value
 	};
-	console.log(gameRecord);
-	console.log('Data Saved');
 
-	console.log(e);
+	await dbConn.saveGameRecord(gameRecord);
+	await dbConn.loadAllData();
+
+	const winId = require('electron').remote.getCurrentWindow().getParentWindow().webContents.id;
+	ipcRenderer.sendTo(winId, 'reloadWindowFlag', true);
+
+	require('electron').remote.getCurrentWindow().close();
 });
 
 
 ipcRenderer.on('dataForGameRecord', (e, args) => {
 	console.log(args);
 
-	gameId.textContent = args.gameId;
+	gameId.textContent = args.game_id;
 	gameTitle.value = args.title;
-	gameReleaseYear.value = args.releaseYear;
+	gameReleaseYear.value = args.release_year;
 	gamePlatform.value = args.platform;
 	gameGenre.value = args.genre;
 	gameDeveloper.value = args.developer;
 	gamePublisher.value = args.publisher;
 	gameFranchise.value = args.franchise;
 	gameSeries.value = args.series;
-	gameNote.value = args.gameNote;
+	gameNote.value = args.game_note;
 	
 	console.log('All Data Loaded');
 })

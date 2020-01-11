@@ -2,21 +2,23 @@
 const {BrowserWindow} = require('electron').remote;
 const {ipcRenderer} = require('electron');
 const windowStateKeeper = require('electron-window-state');
+// const dbConn = require('../db/db-connection');
 
-const stubData = require('../stub-data');
+
+// const stubData = require('../stub-data');
 
 // DOM elements
 const createNew = document.querySelector('#create-new');
 const gameList = document.querySelector('.game-list');
 
-// Launch new game window
-createNew.addEventListener('click', e => {
-	// TODO Prevent Garbage Collection
+let gameRecordWindow;
+
+const createGameRecordWindow = async (gameItem) => {
 	const state = windowStateKeeper({
 		defaultWidth: 300, defaultHeight: 400
 	});
 
-	const gameRecordWindow = new BrowserWindow({
+	const win = new BrowserWindow({
 		parent: require('electron').remote.getCurrentWindow(),
 		modal: true,
 		show: false,
@@ -30,20 +32,38 @@ createNew.addEventListener('click', e => {
 		backgroundColor: '#DEDEDE',
 		webPreferences: {nodeIntegration: true}
 	})
-	gameRecordWindow.loadFile('./src/game-record/static/game-record.html')
-	gameRecordWindow.once('ready-to-show', () => {
-		gameRecordWindow.show();
+
+	win.once('ready-to-show', () => {
+		win.show();
 	});
 
-	state.manage(gameRecordWindow);
+	win.once('closed', () => {
+		gameRecordWindow = undefined;
+	});
 
-	// Remove at end
-	console.log(e);
-	console.log(gameRecordWindow.id);
+	await win.loadFile('./src/game-record/static/game-record.html')
+
+	win.once('ready-to-show', () => {
+		if (typeof gameItem !== 'undefined') {
+			console.log(gameItem)
+			ipcRenderer.sendTo(win.webContents.id, 'dataForGameRecord', Object.assign({win}, gameItem));
+		}
+		win.show();
+	});
+
+	state.manage(win);
+
+	return win;
+};
+
+// Launch new game window
+createNew.addEventListener('click', async e => { 
+	gameRecordWindow = await createGameRecordWindow()
 });
 
-// Load Game Selector
-const games = stubData.gameList;
+//Load Game Selector
+const games = JSON.parse(window.localStorage.getItem('game-list'));
+//const games = stubData.gameList;
 
 games.forEach((game, index) => {
 	const gameItem = document.createElement('div');
@@ -76,20 +96,20 @@ games.forEach((game, index) => {
 	releaseYearSpan.classList.add('align-middle');
 
 	indexSpan.textContent = index + 1;
-	nameSpan.textContent = game.gameTitle;
+	nameSpan.textContent = game.game_title;
 	platformSpan.textContent = game.platform;
-	releaseYearSpan.textContent = game.releaseYear;
+	releaseYearSpan.textContent = game.release_year;
 
-	gameItem.dataset.gameId = game.gameId;
-	gameItem.dataset.title = game.gameTitle;
+	gameItem.dataset.game_id = game.game_id;
+	gameItem.dataset.title = game.game_title;
 	gameItem.dataset.platform = game.platform;
 	gameItem.dataset.genre = game.genre;
-	gameItem.dataset.releaseYear = game.releaseYear;
+	gameItem.dataset.release_year = game.release_year;
 	gameItem.dataset.developer = game.developer;
 	gameItem.dataset.publisher = game.publisher;
 	gameItem.dataset.franchise = game.franchise;
 	gameItem.dataset.series = game.series;
-	gameItem.dataset.gameNote = game.gameNote;
+	gameItem.dataset.game_note = game.game_note;
 
 	// Build Dropdown Menu
 	dropDownDiv.classList.add('btn-group');
@@ -112,32 +132,8 @@ games.forEach((game, index) => {
 	edit.classList.add('dropdown-item');
 	edit.href = '#';
 	edit.textContent = 'Edit';
-	edit.addEventListener('click', e => {
-		const state = windowStateKeeper({
-			defaultWidth: 300, defaultHeight: 400
-		});
-	
-		const gameRecordWindow = new BrowserWindow({
-			parent: require('electron').remote.getCurrentWindow(),
-			modal: true,
-			show: false,
-			x: state.x,
-			y: state.y,
-			width: state.width,
-			height: state.height,
-			minWidth: 300,
-			maxWidth: 1000,
-			minHeight: 400,
-			backgroundColor: '#DEDEDE',
-			webPreferences: {nodeIntegration: true}
-		})
-		gameRecordWindow.loadFile('./src/game-record/static/game-record.html')
-		gameRecordWindow.once('ready-to-show', () => {
-			ipcRenderer.sendTo(gameRecordWindow.webContents.id, 'dataForGameRecord', Object.assign({gameRecordWindow}, gameItem.dataset));
-			gameRecordWindow.show();
-		});
-	
-		state.manage(gameRecordWindow);
+	edit.addEventListener('click', async e => {
+		gameRecordWindow = await createGameRecordWindow(gameItem.dataset);
 	});
 
 	const del = document.createElement('a');
@@ -163,6 +159,8 @@ games.forEach((game, index) => {
 	gameList.append(gameItem);
 });
 
-console.log(createNew);
-console.log(gameList);
+ipcRenderer.on('reloadWindowFlag', () => {
+	require('electron').remote.getCurrentWindow().reload();
+});
+
 console.log('Game List Loaded');
