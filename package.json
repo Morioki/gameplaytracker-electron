@@ -50,8 +50,13 @@
 		],
 		"ignores": [
 			"test",
-			"src/db/models"
-		]
+			"src/db/models",
+			"src/config.js",
+			"src/stub-data.js"
+		],
+		"rules": {
+			"camelcase": 0
+		}
 	},
 	"np": {
 		"publish": false,
