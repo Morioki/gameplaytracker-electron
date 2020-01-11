@@ -1,28 +1,28 @@
 module.exports = {
 	gameList: [
 		{
-			gameId: 1,
-			gameTitle: 'Trails of Cold Steel',
+			game_id: 1,
+			game_title: 'Trails of Cold Steel',
 			platform: 'PS4',
 			genre: 'jRPG',
-			releaseYear: '2019',
+			release_year: '2019',
 			developer: 'Nihon Falcom',
 			publisher: 'Xseed Games',
 			franchise: 'The Legend of Heroes',
 			series: 'Trails of Cold Steel',
-			gameNote: 'Its cool, yo!'
+			game_note: 'Its cool, yo!'
 		},
 		{
-			gameId: 2,
-			gameTitle: 'Trails of Cold Steel II',
+			game_id: 2,
+			game_title: 'Trails of Cold Steel II',
 			platform: 'PS4',
 			genre: 'jRPG',
-			releaseYear: '2019',
+			release_year: '2019',
 			developer: 'Nihon Falcom',
 			publisher: 'Xseed Games',
 			franchise: 'The Legend of Heroes',
 			series: 'Trails of Cold Steel',
-			gameNote: 'Even Cooler!'
+			game_note: 'Even Cooler!'
 		}
 	],
 	playSessionList: [
