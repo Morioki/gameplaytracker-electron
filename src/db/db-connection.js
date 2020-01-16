@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Store = require('electron-store');
 
 const Game = require('./models/game-model');
-// const User = require('./models/user-model');
+const User = require('./models/user-model');
 const GameTime = require('./models/gametime-model');
 
 const store = new Store();
@@ -17,6 +17,16 @@ const mongoURI = `mongodb://${mongoUsername}:${mongoPass}@${mongoHost}:${mongoPo
 
 mongoose.connect(mongoURI, {useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true, useCreateIndex: true});
 
+const getGameRecord = async (gameId) => {
+	const gameRecord = await Game.findOne({game_id: gameId}).exec();
+	return gameRecord._id
+};
+
+const getUserRecord = async (userId) => {
+	const userRecord = await User.findOne({user_id: userId}).exec();
+	return userRecord._id
+};
+
 const loadAllGames = async () => {
 	Game.find({}).lean().exec( (err, res) => {
 		if (!err) {
@@ -26,7 +36,7 @@ const loadAllGames = async () => {
 };
 
 const loadAllPlaySessions = async () => {
-	GameTime.find({}).lean().exec( (err, res) => {
+	GameTime.find({}).lean().populate('game_id').exec( (err, res) => {
 		if (!err) {
 			window.localStorage.setItem('play-session-list', JSON.stringify(res));
 		}
@@ -56,6 +66,41 @@ const saveGameRecord = async (game) => {
 	}
 };
 
+const savePlaySession = async (session) => {
+	const user_id = await getUserRecord(1);
+	const game_id = await getGameRecord(session.game_id);
+
+	const sessionFilter = {
+		play_session_id: session.play_session_id
+	};
+	const playSession = {
+		game_id: game_id,
+		user: user_id,
+		start_date: session.start_date,
+		end_date: session.end_date
+	};
+
+	if (typeof session.play_session_id === 'undefined'){
+		await GameTime(playSession).save();
+	} else {
+		await GameTime.findOneAndUpdate(sessionFilter, playSession);
+	}
+};
+
+const deleteGameData = async (game) => {
+	const gameFilter = {
+		game_id: game.game_id
+	};
+	await Game.findOneAndDelete(gameFilter);
+};
+
+const deletePlaySession = async (playSession) => {
+	const sessionFilter = {
+		play_session_id: session.play_session_id
+	};
+	await GameTime.findOneAndDelete(sessionFilter);
+}
+
 const loadAllData = async () => {
 	window.localStorage.clear();
 	loadAllGames();
@@ -67,4 +112,7 @@ const loadAllData = async () => {
 module.exports.loadAllGames = loadAllGames;
 module.exports.loadAllPlaySessions = loadAllPlaySessions;
 module.exports.saveGameRecord = saveGameRecord;
+module.exports.savePlaySession = savePlaySession;
+module.exports.deleteGameData = deleteGameData;
+module.exports.deletePlaySession = deletePlaySession;
 module.exports.loadAllData = loadAllData;

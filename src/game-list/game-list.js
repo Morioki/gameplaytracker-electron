@@ -4,7 +4,7 @@ const {ipcRenderer} = require('electron');
 const windowStateKeeper = require('electron-window-state');
 // const dbConn = require('../db/db-connection');
 
-
+const dbConn = require('../db/db-connection');
 // const stubData = require('../stub-data');
 
 // DOM elements
@@ -63,7 +63,10 @@ createNew.addEventListener('click', async e => {
 
 //Load Game Selector
 const games = JSON.parse(window.localStorage.getItem('game-list'));
-//const games = stubData.gameList;
+
+// if (typeof games === 'undefined') {
+// 	dbConn.loadAllGames();
+// }
 
 games.forEach((game, index) => {
 	const gameItem = document.createElement('div');

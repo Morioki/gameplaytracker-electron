@@ -1,8 +1,10 @@
 'use strict';
 const {BrowserWindow} = require('electron').remote;
+const {ipcRenderer} = require('electron');
 const {DateTime} = require('luxon');
 const windowStateKeeper = require('electron-window-state');
 
+const dbConn = require('../db/db-connection');
 const stubData = require('../stub-data');
 
 // DOM elements
@@ -53,8 +55,12 @@ createNew.addEventListener('click', async e => {
 });
 
 // Load selectors
-const playSessions = stubData.playSessionList;
-const gameDataList = stubData.gameList;
+const playSessions = JSON.parse(window.localStorage.getItem('play-session-list'));
+// const gameDataList = JSON.parse(window.localStorage.getItem('game-list'));
+
+// if (typeof playSessions === 'undefined') {
+// 	dbConn.loadAllPlaySessions();
+// }
 
 playSessions.forEach(sesh => {
 	const sessionItem = document.createElement('div');
@@ -64,7 +70,7 @@ playSessions.forEach(sesh => {
 	const dropDownDiv = document.createElement('div');
 
 	// Get Game Record for play Session
-	const gameData = gameDataList.find(game => game.game_id === sesh.game_id);
+	// const gameData = gameDataList.find(game => game.game_id === sesh.game_id);
 
 	sessionItem.classList.add('session-item');
 	sessionItem.classList.add('row');
@@ -84,10 +90,14 @@ playSessions.forEach(sesh => {
 	timePlayedSpan.classList.add('col');
 	timePlayedSpan.classList.add('align-middle');
 
-	nameSpan.textContent = gameData.game_title;
-	dateSpan.textContent = DateTime.fromSQL(sesh.start_date).toLocaleString(DateTime.DATE_SHORT);
+	nameSpan.textContent = sesh.game_id.game_title;
+	
+	const startDate = new Date(sesh.start_date).toISOString().slice(0,19).replace('T', ' ');
+	const endDate = new Date(sesh.end_date).toISOString().slice(0,19).replace('T', ' ');
+	
+	dateSpan.textContent = DateTime.fromSQL(startDate).toLocaleString(DateTime.DATE_SHORT);
 
-	const hours = Math.round(Math.abs(((DateTime.fromSQL(sesh.start_date) - DateTime.fromSQL(sesh.end_date)) / 3.6e6) * 100) + Number.EPSILON) / 100;
+	const hours = Math.round(Math.abs(((DateTime.fromSQL(startDate) - DateTime.fromSQL(endDate)) / 3.6e6) * 100) + Number.EPSILON) / 100;
 
 	timePlayedSpan.textContent = hours;
 
@@ -111,7 +121,7 @@ playSessions.forEach(sesh => {
 	const edit = document.createElement('a');
 	edit.classList.add('dropdown-item');
 	edit.href = '#';
-	edit.textContent = 'Edit';
+	edit.textContent = 'Edit (Broken)';
 	edit.addEventListener('click', e => {
 		console.log('Edit Request');
 	});
@@ -137,5 +147,9 @@ playSessions.forEach(sesh => {
 
 	playSessionList.append(sessionItem);
 });
+
+ipcRenderer.on('reloadWindowFlagSession', () => {
+	require('electron').remote.getCurrentWindow().reload();
+})
 
 console.log('Play Session List Loaded');

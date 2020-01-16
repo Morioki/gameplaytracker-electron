@@ -1,8 +1,9 @@
 'use strict';
-const {DateTime} = require('luxon');
+const {ipcRenderer} = require('electron');
 
 const stubData = require('../stub-data');
 const Stopwatch = require('../stopwatch/stopwatch');
+const dbConn = require('../db/db-connection');
 
 // DOM Elemenets
 const gameSelector = document.querySelector('#game-selector');
@@ -12,7 +13,7 @@ const swClear = document.querySelector('#sw-clear');
 const recordSave = document.querySelector('#record-save');
 
 // Load Game Selector
-const games = stubData.gameList;
+const games = JSON.parse(window.localStorage.getItem('game-list'));
 
 games.forEach(game => {
 	const optionEl = document.createElement('option');
@@ -39,21 +40,35 @@ const sw = new Stopwatch(
 );
 
 swStart.addEventListener('click', () => {
-	const startDate = new Date().toISOString().slice(0,19).replace('T', ' ');	
 	sw.start();
-	console.log(startDate);
 });
 
 swStop.addEventListener('click', () => {
 	sw.stop();
 });
 
-swClear.addEventListener('click', sw.clear);
+swClear.addEventListener('click', () => {
+	sw.clear()
+});
 
 // Save Handler
-recordSave.addEventListener('click', e => {
-	console.log(sw.dumpTime(sw.times))
-	console.log(e);
+recordSave.addEventListener('click', async e => {
+	if (sw.running) return;
+
+	const playSession = {
+		game_id: gameSelector[gameSelector.selectedIndex].value,
+		user: 1,
+		start_date: new Date(sw.startDate).toISOString().slice(0,19).replace('T', ' '),
+		end_date: new Date(sw.calcEndDate()).toISOString().slice(0,19).replace('T', ' ')
+	}
+
+	await dbConn.savePlaySession(playSession);
+	await dbConn.loadAllData();
+
+	const winId = require('electron').remote.getCurrentWindow().getParentWindow().webContents.id;
+	ipcRenderer.sendTo(winId, 'reloadWindowFlagSession', true);
+
+	require('electron').remote.getCurrentWindow().close();
 });
 
 console.log('Play Session Loaded');

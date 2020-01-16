@@ -10,11 +10,16 @@ function Stopwatch(display, results) {
 	// Methods
 	this.reset = () => {
 		this.times = [0, 0, 0, 0];
+		this.startDate = null;
 	};
 
 	this.start = () => {
 		if (!this.time) {
 			this.time = performance.now();
+		}
+
+		if (!this.startDate) {
+			this.startDate = Date.now();
 		}
 
 		if (!this.running) {
@@ -88,14 +93,15 @@ function Stopwatch(display, results) {
 			${pad0(Math.floor(times[3]), 2)}`;
 	};
 
-	this.dumpTime = times => {
-		const hour = times[0];
-		const min = times[1];
-		const sec = times[2];
-		const milli = times[3];
+	this.calcEndDate = () => {
+		const hour = this.times[0];
+		const min = this.times[1];
+		const sec = this.times[2];
+		const milli = this.times[3];
 
-		const runningTime =	(((((hour * 60) + min) * 60) + sec) * 100) + milli;
-		return runningTime;
+		const runningTime =	(((((hour * 60) + min) * 60) + sec) * 1000) + milli;
+		
+		return this.startDate + runningTime;
 	};
 
 	this.print();
