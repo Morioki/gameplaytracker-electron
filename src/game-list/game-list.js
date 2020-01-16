@@ -144,8 +144,8 @@ games.forEach((game, index) => {
 	del.href = '#';
 	del.textContent = 'Delete';
 	del.addEventListener('click', e => {
+		//TODO Add Toast for delete (Indicating that not currently implemented)
 		console.log('Deleted');
-		console.log(e);
 	});
 
 	dropDownDiv.append(ddButton);

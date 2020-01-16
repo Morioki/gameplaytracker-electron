@@ -83,7 +83,14 @@ const savePlaySession = async (session) => {
 	if (typeof session.play_session_id === 'undefined'){
 		await GameTime(playSession).save();
 	} else {
-		await GameTime.findOneAndUpdate(sessionFilter, playSession);
+		const upPlaySession = {
+			game_id: game_id,
+			user_id: user_id
+		}
+		console.log(upPlaySession)
+		console.log(sessionFilter)
+		console.log(session)
+		await GameTime.findOneAndUpdate(sessionFilter, upPlaySession);
 	}
 };
 

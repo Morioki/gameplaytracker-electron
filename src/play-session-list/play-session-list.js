@@ -49,6 +49,49 @@ const createPlaySessionWindow = async () => {
 	return win;
 };
 
+const createPlaySessionEditWindow = async (data) => {
+	
+	const state = windowStateKeeper({
+		defaultWidth: 600, defaultHeight: 600
+	});
+
+	const win = new BrowserWindow({
+		parent: require('electron').remote.getCurrentWindow(),
+		modal: true,
+		show: false,
+		x: state.x,
+		y: state.y,
+		width: state.width,
+		height: state.height,
+		minWidth: 300,
+		maxWidth: 600,
+		maxHeight: 600,
+		backgroundColor:'#DEDEDE',
+		webPreferences: {nodeIntegration: true}
+	});
+
+	win.once('ready-to-show', () => {
+		win.show();
+	});
+
+	win.once('closed', () => {
+		playSessionWindow = undefined;
+	});
+
+	await win.loadFile('./src/play-session-edit/static/play-session-edit.html');
+
+	win.once('ready-to-show', () => {
+		if (typeof data !== 'undefined') {
+			ipcRenderer.sendTo(win.webContents.id, 'dataForSessionEdit', Object.assign({win}, data));
+		}
+		win.show();
+	});
+
+	state.manage(win);
+
+	return win;
+};
+
 // Launch new session window
 createNew.addEventListener('click', async e => {
 	playSessionWindow = await createPlaySessionWindow();
@@ -91,6 +134,9 @@ playSessions.forEach(sesh => {
 	timePlayedSpan.classList.add('align-middle');
 
 	nameSpan.textContent = sesh.game_id.game_title;
+
+	sessionItem.dataset.session_id = sesh.gametime_id;
+	sessionItem.dataset.game_id = sesh.game_id.game_id;
 	
 	const startDate = new Date(sesh.start_date).toISOString().slice(0,19).replace('T', ' ');
 	const endDate = new Date(sesh.end_date).toISOString().slice(0,19).replace('T', ' ');
@@ -121,18 +167,18 @@ playSessions.forEach(sesh => {
 	const edit = document.createElement('a');
 	edit.classList.add('dropdown-item');
 	edit.href = '#';
-	edit.textContent = 'Edit (Broken)';
-	edit.addEventListener('click', e => {
-		console.log('Edit Request');
+	edit.textContent = 'Edit';
+	edit.addEventListener('click', async () => {
+		playSessionWindow = await createPlaySessionEditWindow(sessionItem.dataset);
 	});
 
 	const del = document.createElement('a');
 	del.classList.add('dropdown-item');
 	del.href = '#';
 	del.textContent = 'Delete';
-	del.addEventListener('click', e => {
+	del.addEventListener('click', async () => {
+		//TODO Add Toast for delete (Indicating that not currently implemented)
 		console.log('Deleted');
-		console.log(e);
 	});
 
 	dropDownDiv.append(ddButton);
