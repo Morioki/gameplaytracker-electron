@@ -33,6 +33,7 @@
 		"luxon": "^1.21.3",
 		"mongoose": "^5.8.3",
 		"mongoose-sequence": "^5.2.2",
+		"mousetrap": "^1.6.3",
 		"popper.js": "^1.16.0"
 	},
 	"devDependencies": {
