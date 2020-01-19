@@ -10,13 +10,11 @@
 
 **macOS**
 
-[**Download**](https://github.com/user/repo/releases/latest) the `.dmg` file.
+Build not yet available.
 
 **Linux**
 
-[**Download**](https://github.com/user/repo/releases/latest) the `.AppImage` or `.deb` file.
-
-*The AppImage needs to be [made executable](http://discourse.appimage.org/t/how-to-make-an-appimage-executable/80) after download.*
+Build not yet available.
 
 **Windows**
 
@@ -49,3 +47,4 @@ $ npm run release
 
 ## Credits
 Package built on top of Sindre Sorhus' [Electron Boilerplate](https://github.com/sindresorhus/electron-boilerplate)
+Initial icon made by [Good Ware](https://www.flaticon.com/authors/good-ware) from [Flaticon](https://www.flaticon.com/)
