@@ -3,7 +3,7 @@
 	"productName": "Gameplay Tracker",
 	"main": "main.js",
 	"version": "0.1.0",
-	"description": "A simple electron application to track game play sessions",
+	"description": "Gameplay Tracker",
 	"license": "MIT",
 	"repository": "https://github.com/Morioki/GameplayTracker",
 	"author": {
@@ -17,7 +17,7 @@
 		"test": "ava",
 		"start": "electron .",
 		"pack": "electron-builder --dir",
-		"dist": "electron-builder --macos --linux --windows",
+		"dist": "electron-builder --windows",
 		"release": "np"
 	},
 	"dependencies": {
