@@ -4,6 +4,7 @@ const dbConn = require('../db/db-connection');
 
 // DOM Elements
 const gameSelector = document.querySelector('#game-selector');
+const sessionNote = document.querySelector('#session-note-value');
 const recordSave = document.querySelector('#record-save');
 
 const games = JSON.parse(window.localStorage.getItem('game-list'));
@@ -29,25 +30,25 @@ games.forEach(game => {
 });
 
 ipcRenderer.on('dataForSessionEdit', (e, args) => {
-    gameSelector.value = args.game_id;
-
-    activeID = args.session_id;
-})
+	gameSelector.value = args.game_id;
+	sessionNote.value = args.note;
+	activeID = args.session_id;
+});
 
 // Save Handler
-recordSave.addEventListener('click', async e => {
+recordSave.addEventListener('click', async () => {
 	const playSession = {
-        play_session_id: activeID,
-		game_id: gameSelector[gameSelector.selectedIndex].value
-    }
-    
+		play_session_id: activeID,
+		game_id: gameSelector[gameSelector.selectedIndex].value,
+		note: sessionNote.value
+	};
+
 	await dbConn.savePlaySession(playSession);
 	await dbConn.loadAllData();
 
-	const winId = require('electron').remote.getCurrentWindow().getParentWindow().webContents.id;
-	ipcRenderer.sendTo(winId, 'reloadWindowFlagSession', true);
-
-	// setTimeout(() => {
-    //     require('electron').remote.getCurrentWindow().close();
-    // }, 2000); 
+	setTimeout(() => {
+		const winId = require('electron').remote.getCurrentWindow().getParentWindow().webContents.id;
+		ipcRenderer.sendTo(winId, 'reloadWindowFlagSession', true);
+		require('electron').remote.getCurrentWindow().close();
+	}, 2000);
 });

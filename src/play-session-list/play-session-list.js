@@ -4,17 +4,14 @@ const {ipcRenderer} = require('electron');
 const {DateTime} = require('luxon');
 const windowStateKeeper = require('electron-window-state');
 
-const dbConn = require('../db/db-connection');
-const stubData = require('../stub-data');
-
 // DOM elements
 const createNew = document.querySelector('#create-new');
 const playSessionList = document.querySelector('.play-session-list');
 
+// Prevent Window from being garbage collected
 let playSessionWindow;
 
 const createPlaySessionWindow = async () => {
-	
 	const state = windowStateKeeper({
 		defaultWidth: 600, defaultHeight: 600
 	});
@@ -30,7 +27,7 @@ const createPlaySessionWindow = async () => {
 		minWidth: 300,
 		maxWidth: 600,
 		maxHeight: 600,
-		backgroundColor:'#DEDEDE',
+		backgroundColor: '#DEDEDE',
 		webPreferences: {nodeIntegration: true}
 	});
 
@@ -49,8 +46,7 @@ const createPlaySessionWindow = async () => {
 	return win;
 };
 
-const createPlaySessionEditWindow = async (data) => {
-	
+const createPlaySessionEditWindow = async data => {
 	const state = windowStateKeeper({
 		defaultWidth: 600, defaultHeight: 600
 	});
@@ -66,7 +62,7 @@ const createPlaySessionEditWindow = async (data) => {
 		minWidth: 300,
 		maxWidth: 600,
 		maxHeight: 600,
-		backgroundColor:'#DEDEDE',
+		backgroundColor: '#DEDEDE',
 		webPreferences: {nodeIntegration: true}
 	});
 
@@ -84,6 +80,7 @@ const createPlaySessionEditWindow = async (data) => {
 		if (typeof data !== 'undefined') {
 			ipcRenderer.sendTo(win.webContents.id, 'dataForSessionEdit', Object.assign({win}, data));
 		}
+
 		win.show();
 	});
 
@@ -93,17 +90,12 @@ const createPlaySessionEditWindow = async (data) => {
 };
 
 // Launch new session window
-createNew.addEventListener('click', async e => {
+createNew.addEventListener('click', async () => {
 	playSessionWindow = await createPlaySessionWindow();
 });
 
 // Load selectors
 const playSessions = JSON.parse(window.localStorage.getItem('play-session-list'));
-// const gameDataList = JSON.parse(window.localStorage.getItem('game-list'));
-
-// if (typeof playSessions === 'undefined') {
-// 	dbConn.loadAllPlaySessions();
-// }
 
 playSessions.forEach(sesh => {
 	const sessionItem = document.createElement('div');
@@ -111,9 +103,6 @@ playSessions.forEach(sesh => {
 	const dateSpan = document.createElement('span');
 	const timePlayedSpan = document.createElement('span');
 	const dropDownDiv = document.createElement('div');
-
-	// Get Game Record for play Session
-	// const gameData = gameDataList.find(game => game.game_id === sesh.game_id);
 
 	sessionItem.classList.add('session-item');
 	sessionItem.classList.add('row');
@@ -137,10 +126,11 @@ playSessions.forEach(sesh => {
 
 	sessionItem.dataset.session_id = sesh.gametime_id;
 	sessionItem.dataset.game_id = sesh.game_id.game_id;
-	
-	const startDate = new Date(sesh.start_date).toISOString().slice(0,19).replace('T', ' ');
-	const endDate = new Date(sesh.end_date).toISOString().slice(0,19).replace('T', ' ');
-	
+	sessionItem.dataset.note = sesh.note;
+
+	const startDate = new Date(sesh.start_date).toISOString().slice(0, 19).replace('T', ' ');
+	const endDate = new Date(sesh.end_date).toISOString().slice(0, 19).replace('T', ' ');
+
 	dateSpan.textContent = DateTime.fromSQL(startDate).toLocaleString(DateTime.DATE_SHORT);
 
 	const hours = Math.round(Math.abs(((DateTime.fromSQL(startDate) - DateTime.fromSQL(endDate)) / 3.6e6) * 100) + Number.EPSILON) / 100;
@@ -156,7 +146,7 @@ playSessions.forEach(sesh => {
 	ddButton.classList.add('btn');
 	ddButton.classList.add('btn-secondary');
 	ddButton.classList.add('dropdown-toggle');
-	ddButton.type = 'button'
+	ddButton.type = 'button';
 	ddButton.dataset.toggle = 'dropdown';
 	ddButton.setAttribute('aria-haspopup', 'true');
 	ddButton.setAttribute('aria-expanded', 'false');
@@ -177,7 +167,6 @@ playSessions.forEach(sesh => {
 	del.href = '#';
 	del.textContent = 'Delete';
 	del.addEventListener('click', async () => {
-		//TODO Add Toast for delete (Indicating that not currently implemented)
 		console.log('Deleted');
 	});
 
@@ -195,7 +184,6 @@ playSessions.forEach(sesh => {
 });
 
 ipcRenderer.on('reloadWindowFlagSession', () => {
+	playSessionWindow.reload();
 	require('electron').remote.getCurrentWindow().reload();
-})
-
-console.log('Play Session List Loaded');
+});

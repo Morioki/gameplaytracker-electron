@@ -1,7 +1,6 @@
 'use strict';
 const {ipcRenderer} = require('electron');
 
-const stubData = require('../stub-data');
 const Stopwatch = require('../stopwatch/stopwatch');
 const dbConn = require('../db/db-connection');
 
@@ -10,6 +9,7 @@ const gameSelector = document.querySelector('#game-selector');
 const swStart = document.querySelector('#sw-start');
 const swStop = document.querySelector('#sw-stop');
 const swClear = document.querySelector('#sw-clear');
+const sessionNote = document.querySelector('#session-note-value');
 const recordSave = document.querySelector('#record-save');
 
 // Load Game Selector
@@ -48,28 +48,29 @@ swStop.addEventListener('click', () => {
 });
 
 swClear.addEventListener('click', () => {
-	sw.clear()
+	sw.clear();
 });
 
 // Save Handler
-recordSave.addEventListener('click', async e => {
-	if (sw.running) return;
+recordSave.addEventListener('click', async () => {
+	if (sw.running) {
+		return;
+	}
 
 	const playSession = {
 		game_id: gameSelector[gameSelector.selectedIndex].value,
 		user: 1,
-		start_date: new Date(sw.startDate).toISOString().slice(0,19).replace('T', ' '),
-		end_date: new Date(sw.calcEndDate()).toISOString().slice(0,19).replace('T', ' ')
-	}
+		start_date: new Date(sw.startDate).toISOString().slice(0, 19).replace('T', ' '),
+		end_date: new Date(sw.calcEndDate()).toISOString().slice(0, 19).replace('T', ' '),
+		note: sessionNote.value
+	};
 
 	await dbConn.savePlaySession(playSession);
 	await dbConn.loadAllData();
 
-	const winId = require('electron').remote.getCurrentWindow().getParentWindow().webContents.id;
-	ipcRenderer.sendTo(winId, 'reloadWindowFlagSession', true);
-
-	require('electron').remote.getCurrentWindow().close();
+	setTimeout(() => {
+		const winId = require('electron').remote.getCurrentWindow().getParentWindow().webContents.id;
+		ipcRenderer.sendTo(winId, 'reloadWindowFlagSession', true);
+		require('electron').remote.getCurrentWindow().close();
+	}, 2000);
 });
-
-console.log('Play Session Loaded');
-

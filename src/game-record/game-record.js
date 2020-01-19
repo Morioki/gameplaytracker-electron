@@ -16,7 +16,7 @@ const gameSeries = document.querySelector('#game-series-value');
 const gameNote = document.querySelector('#game-note-value');
 const gameSave = document.querySelector('#game-save');
 
-gameSave.addEventListener('click', async e => {
+gameSave.addEventListener('click', async () => {
 	const gameRecord = {
 		game_id: gameId.textContent,
 		game_title: gameTitle.value,
@@ -33,16 +33,14 @@ gameSave.addEventListener('click', async e => {
 	await dbConn.saveGameRecord(gameRecord);
 	await dbConn.loadAllData();
 
-	const winId = require('electron').remote.getCurrentWindow().getParentWindow().webContents.id;
-	ipcRenderer.sendTo(winId, 'reloadWindowFlag', true);
-
-	require('electron').remote.getCurrentWindow().close();
+	setTimeout(() => {
+		const winId = require('electron').remote.getCurrentWindow().getParentWindow().webContents.id;
+		ipcRenderer.sendTo(winId, 'reloadWindowFlag', true);
+		require('electron').remote.getCurrentWindow().close();
+	}, 2000);
 });
 
-
 ipcRenderer.on('dataForGameRecord', (e, args) => {
-	console.log(args);
-
 	gameId.textContent = args.game_id;
 	gameTitle.value = args.title;
 	gameReleaseYear.value = args.release_year;
@@ -53,8 +51,4 @@ ipcRenderer.on('dataForGameRecord', (e, args) => {
 	gameFranchise.value = args.franchise;
 	gameSeries.value = args.series;
 	gameNote.value = args.game_note;
-	
-	console.log('All Data Loaded');
-})
-
-console.log('Game Record Loaded');
+});

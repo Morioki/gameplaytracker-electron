@@ -13,22 +13,22 @@ const mongoPort = store.get('databases.mongodb.port');
 const mongoUsername = store.get('databases.mongodb.username');
 const mongoPass = store.get('databases.mongodb.password');
 const mongoAuthSrc = store.get('databases.mongodb.authentication_source');
-const mongoURI = `mongodb://${mongoUsername}:${mongoPass}@${mongoHost}:${mongoPort}/gameplay_tracker_electron?authSource=${mongoAuthSrc}`
+const mongoURI = `mongodb://${mongoUsername}:${mongoPass}@${mongoHost}:${mongoPort}/gameplay_tracker_electron?authSource=${mongoAuthSrc}`;
 
 mongoose.connect(mongoURI, {useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true, useCreateIndex: true});
 
-const getGameRecord = async (gameId) => {
+const getGameRecord = async gameId => {
 	const gameRecord = await Game.findOne({game_id: gameId}).exec();
-	return gameRecord._id
+	return gameRecord._id;
 };
 
-const getUserRecord = async (userId) => {
+const getUserRecord = async userId => {
 	const userRecord = await User.findOne({user_id: userId}).exec();
-	return userRecord._id
+	return userRecord._id;
 };
 
 const loadAllGames = async () => {
-	Game.find({}).lean().exec( (err, res) => {
+	Game.find({}).lean().exec((err, res) => {
 		if (!err) {
 			window.localStorage.setItem('game-list', JSON.stringify(res));
 		}
@@ -36,14 +36,14 @@ const loadAllGames = async () => {
 };
 
 const loadAllPlaySessions = async () => {
-	GameTime.find({}).lean().populate('game_id').exec( (err, res) => {
+	GameTime.find({}).lean().populate('game_id').exec((err, res) => {
 		if (!err) {
 			window.localStorage.setItem('play-session-list', JSON.stringify(res));
 		}
 	});
 };
 
-const saveGameRecord = async (game) => {
+const saveGameRecord = async game => {
 	const gameFilter = {
 		game_id: game.game_id
 	};
@@ -66,55 +66,53 @@ const saveGameRecord = async (game) => {
 	}
 };
 
-const savePlaySession = async (session) => {
+const savePlaySession = async session => {
 	const user_id = await getUserRecord(1);
 	const game_id = await getGameRecord(session.game_id);
 
 	const sessionFilter = {
-		play_session_id: session.play_session_id
-	};
-	const playSession = {
-		game_id: game_id,
-		user: user_id,
-		start_date: session.start_date,
-		end_date: session.end_date
+		gametime_id: session.play_session_id
 	};
 
-	if (typeof session.play_session_id === 'undefined'){
+	const playSession = {
+		game_id,
+		user: user_id,
+		start_date: session.start_date,
+		end_date: session.end_date,
+		note: session.note
+	};
+
+	if (typeof session.play_session_id === 'undefined') {
 		await GameTime(playSession).save();
 	} else {
 		const upPlaySession = {
-			game_id: game_id,
-			user_id: user_id
-		}
-		console.log(upPlaySession)
-		console.log(sessionFilter)
-		console.log(session)
+			game_id,
+			note: session.note
+		};
+
 		await GameTime.findOneAndUpdate(sessionFilter, upPlaySession);
 	}
 };
 
-const deleteGameData = async (game) => {
+const deleteGameData = async game => {
 	const gameFilter = {
 		game_id: game.game_id
 	};
 	await Game.findOneAndDelete(gameFilter);
 };
 
-const deletePlaySession = async (playSession) => {
+const deletePlaySession = async session => {
 	const sessionFilter = {
 		play_session_id: session.play_session_id
 	};
 	await GameTime.findOneAndDelete(sessionFilter);
-}
+};
 
 const loadAllData = async () => {
 	window.localStorage.clear();
-	loadAllGames();
-	loadAllPlaySessions();
+	await loadAllGames();
+	await loadAllPlaySessions();
 };
-
-
 
 module.exports.loadAllGames = loadAllGames;
 module.exports.loadAllPlaySessions = loadAllPlaySessions;

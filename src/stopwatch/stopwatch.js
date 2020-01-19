@@ -28,13 +28,6 @@ function Stopwatch(display, results) {
 		}
 	};
 
-	// this.lap = () => {
-	// 	const {times} = this;
-	// 	const li = document.createElement('li');
-	// 	li.textContent = this.format(times);
-	// 	this.results.append(li);
-	// };
-
 	this.stop = () => {
 		this.running = false;
 		this.time = null;
@@ -42,7 +35,10 @@ function Stopwatch(display, results) {
 
 	this.clear = () => {
 		clearChildren(this.results);
-		if(this.running) this.stop();
+		if (this.running) {
+			this.stop();
+		}
+
 		this.reset();
 		this.print();
 	};
@@ -59,8 +55,10 @@ function Stopwatch(display, results) {
 	};
 
 	this.calculate = timestamp => {
-		if (!this.time)
+		if (!this.time) {
 			return;
+		}
+
 		const diff = timestamp - this.time;
 
 		this.times[3] += diff / 10;
@@ -100,7 +98,7 @@ function Stopwatch(display, results) {
 		const milli = this.times[3];
 
 		const runningTime =	(((((hour * 60) + min) * 60) + sec) * 1000) + milli;
-		
+
 		return this.startDate + runningTime;
 	};
 

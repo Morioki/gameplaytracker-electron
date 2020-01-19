@@ -56,7 +56,8 @@
 			"src/stub-data.js"
 		],
 		"rules": {
-			"camelcase": 0
+			"camelcase": 0,
+			"new-cap": 0
 		}
 	},
 	"np": {

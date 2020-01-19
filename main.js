@@ -7,7 +7,7 @@ const {is} = require('electron-util');
 const unhandled = require('electron-unhandled');
 const debug = require('electron-debug');
 const contextMenu = require('electron-context-menu');
-const config = require('./src/config');
+/// const config = require('./src/config');
 const menu = require('./src/menu');
 const packageJson = require('./package.json');
 
@@ -47,7 +47,9 @@ const createMainWindow = async () => {
 		minWidth: 350,
 		maxWidth: 1000,
 		minHeight: 300,
-		webPreferences: {nodeIntegration: true}
+		webPreferences: {
+			nodeIntegration: true
+		}
 	});
 
 	win.on('ready-to-show', () => {
@@ -99,7 +101,4 @@ app.on('activate', async () => {
 	await app.whenReady();
 	Menu.setApplicationMenu(menu);
 	mainWindow = await createMainWindow();
-
-	// const favoriteAnimal = config.get('favoriteAnimal');
-	// mainWindow.webContents.executeJavaScript(`document.querySelector('header p').textContent = 'Your favorite animal is ${favoriteAnimal}'`);
 })();
