@@ -9,13 +9,13 @@ const debug = require('electron-debug');
 const contextMenu = require('electron-context-menu');
 /// const config = require('./src/config');
 const menu = require('./src/menu');
-const packageJson = require('./package.json');
+/// const packageJson = require('./package.json');
 
 unhandled();
 debug();
 contextMenu();
 
-app.setAppUserModelId(packageJson.build.appId);
+app.setAppUserModelId('com.gbcs.GameplayTracker');
 
 // Uncomment this before publishing your first version.
 // It's commented out as it throws an error if there are no published versions.
