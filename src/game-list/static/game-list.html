@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Bootstrap Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script>let $ = require('jquery');</script>
+    <script>require('popper.js');</script>
+    <script>require('bootstrap');</script>
+    <link rel="stylesheet" href="./game-list.css">
+    <title>Game List</title>
+</head>
+<body>
+    <header></header>
+    <main>
+        <div class="container-flow">
+            <div class="controls row p-1">
+                <div class="col">
+                    <button class="btn btn-primary" id="create-new">Create New</button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="game-list container-fluid">
+
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer></footer>
+    <script>
+        require('../game-list')    
+    </script>
+</body>
+</html>

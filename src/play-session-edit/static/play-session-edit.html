@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Edit Play Session</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Bootstrap Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script>let $ = require('jquery');</script>
+    <script>require('popper.js');</script>
+    <script>require('bootstrap');</script>
+    <link rel="stylesheet" href="./play-session-edit.css">
+</head>
+<body>
+    <header></header>
+    <main>
+        <div class="container-flow">
+            <div class="row p-1">
+                <div class="col">
+                    <div class="games input-group input-group-sm mb-1">
+                        <div class="input-group-prepend">
+                            <label for="game-selector" class="input-group-text">Game</label>
+                        </div>
+                        <select id="game-selector" class="custom-select"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col">
+                    <div class="session-note input-group input-group-sm mb-1">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Notes</span>
+                        </div>
+                        <textarea name="session-note-name" id="session-note-value" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="save row p-1">
+                <div class="col">
+                    <button class="btn btn-success float-right" id="record-save">Save</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer></footer>
+    <script>
+        require('../play-session-edit')
+    </script>
+</body>
+</html>

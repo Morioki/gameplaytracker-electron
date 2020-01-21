@@ -1,20 +1,21 @@
 'use strict';
 const path = require('path');
 const {app, BrowserWindow, Menu} = require('electron');
+const windowStateKeeper = require('electron-window-state');
 /// const {autoUpdater} = require('electron-updater');
 const {is} = require('electron-util');
 const unhandled = require('electron-unhandled');
 const debug = require('electron-debug');
 const contextMenu = require('electron-context-menu');
-const config = require('./config');
-const menu = require('./menu');
-const packageJson = require('./package.json');
+/// const config = require('./src/config');
+const menu = require('./src/menu');
+/// const packageJson = require('./package.json');
 
 unhandled();
 debug();
 contextMenu();
 
-app.setAppUserModelId(packageJson.build.appId);
+app.setAppUserModelId('com.gbcs.GameplayTracker');
 
 // Uncomment this before publishing your first version.
 // It's commented out as it throws an error if there are no published versions.
@@ -31,11 +32,24 @@ app.setAppUserModelId(packageJson.build.appId);
 let mainWindow;
 
 const createMainWindow = async () => {
+	// Win State Keeper
+	const state = windowStateKeeper({
+		defaultWidth: 600, defaultHeight: 400
+	});
+
 	const win = new BrowserWindow({
 		title: app.name,
 		show: false,
-		width: 600,
-		height: 400
+		x: state.x,
+		y: state.y,
+		width: state.width,
+		height: state.height,
+		minWidth: 350,
+		maxWidth: 1000,
+		minHeight: 300,
+		webPreferences: {
+			nodeIntegration: true
+		}
 	});
 
 	win.on('ready-to-show', () => {
@@ -48,7 +62,10 @@ const createMainWindow = async () => {
 		mainWindow = undefined;
 	});
 
-	await win.loadFile(path.join(__dirname, 'index.html'));
+	await win.loadFile(path.join(__dirname, 'src/landing/landing.html'));
+
+	// Manage new window state
+	state.manage(win);
 
 	return win;
 };
@@ -84,7 +101,4 @@ app.on('activate', async () => {
 	await app.whenReady();
 	Menu.setApplicationMenu(menu);
 	mainWindow = await createMainWindow();
-
-	const favoriteAnimal = config.get('favoriteAnimal');
-	mainWindow.webContents.executeJavaScript(`document.querySelector('header p').textContent = 'Your favorite animal is ${favoriteAnimal}'`);
 })();
