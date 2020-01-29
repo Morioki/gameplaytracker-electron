@@ -107,9 +107,9 @@ Mousetrap.bind('p', async () => {
 		const playSessions = JSON.parse(window.localStorage.getItem('play-session-list'));
 		const result = [];
 		playSessions.reduce((res, sesh) => {
-			const startDate = new Date(sesh.start_date).toISOString().slice(0, 19).replace('T', ' ');
-			const endDate = new Date(sesh.end_date).toISOString().slice(0, 19).replace('T', ' ');
-			const hours = (Math.abs(((DateTime.fromSQL(startDate) - DateTime.fromSQL(endDate)) / 3.6e6) * 100) + Number.EPSILON) / 100;
+			const startDate = DateTime.fromISO(sesh.start_date);
+			const endDate = DateTime.fromISO(sesh.end_date);
+			const hours = (Math.abs(((startDate - endDate) / 3.6e6) * 100) + Number.EPSILON) / 100;
 			if (!res[sesh.game_id.game_title]) {
 				res[sesh.game_id.game_title] = {
 					game_title: sesh.game_id.game_title,

@@ -2,6 +2,7 @@
 const {BrowserWindow} = require('electron').remote;
 const {ipcRenderer} = require('electron');
 const windowStateKeeper = require('electron-window-state');
+const _ = require('lodash');
 
 // DOM elements
 const createNew = document.querySelector('#create-new');
@@ -59,98 +60,139 @@ createNew.addEventListener('click', async () => {
 
 // Load Game Selector
 const games = JSON.parse(window.localStorage.getItem('game-list'));
+const sortedGames = _.sortBy(games, 'game_title');
+const groupedGames = _.groupBy(sortedGames, 'platform');
 
-games.forEach((game, index) => {
-	const gameItem = document.createElement('div');
-	const indexSpan = document.createElement('span');
-	const nameSpan = document.createElement('span');
-	const platformSpan = document.createElement('span');
-	const releaseYearSpan = document.createElement('span');
-	const dropDownDiv = document.createElement('div');
+_.each(groupedGames, (value, key) => {
+	const card = document.createElement('div');
+	card.classList.add('card');
 
-	gameItem.classList.add('game-item');
-	gameItem.classList.add('row');
-	gameItem.classList.add('p-1');
+	const card_header_div = document.createElement('card-header');
+	card_header_div.id = 'heading' + key.replace(/ /g, '');
 
-	indexSpan.classList.add('game-index');
-	indexSpan.classList.add('col-1');
-	indexSpan.classList.add('align-middle');
+	const card_header_h5 = document.createElement('h5');
+	card_header_h5.classList.add('mb-0');
 
-	nameSpan.classList.add('game-title');
-	nameSpan.classList.add('col-5');
-	nameSpan.classList.add('align-middle');
+	const card_header_btn = document.createElement('button');
+	card_header_btn.classList.add('btn');
+	card_header_btn.classList.add('btn-secondary');
+	card_header_btn.classList.add('btn-block');
+	card_header_btn.dataset.toggle = 'collapse';
+	card_header_btn.dataset.target = '#collapse' + key.replace(/ /g, '');
+	card_header_btn.setAttribute('aria-expanded', 'false');
+	card_header_btn.setAttribute('aria-controls', 'collapse' + key.replace(/ /g, ''));
+	card_header_btn.textContent = key;
 
-	platformSpan.classList.add('game-subdata');
-	platformSpan.classList.add('platform');
-	platformSpan.classList.add('col');
-	platformSpan.classList.add('align-middle');
+	const collapse_region = document.createElement('div');
+	collapse_region.classList.add('collapse');
+	collapse_region.id = 'collapse' + key.replace(/ /g, '');
+	collapse_region.setAttribute('aria-labelledby', 'heading' + key.replace(/ /g, ''));
+	collapse_region.dataset.parent = '#accordion';
 
-	releaseYearSpan.classList.add('game-subdata');
-	releaseYearSpan.classList.add('release-year');
-	releaseYearSpan.classList.add('col');
-	releaseYearSpan.classList.add('align-middle');
+	const card_body = document.createElement('div');
+	card_body.classList.add('card-body');
 
-	indexSpan.textContent = index + 1;
-	nameSpan.textContent = game.game_title;
-	platformSpan.textContent = game.platform;
-	releaseYearSpan.textContent = game.release_year;
+	value.forEach((game, index) => {
+		const gameItem = document.createElement('div');
+		const indexSpan = document.createElement('span');
+		const nameSpan = document.createElement('span');
+		const platformSpan = document.createElement('span');
+		const releaseYearSpan = document.createElement('span');
+		const dropDownDiv = document.createElement('div');
 
-	gameItem.dataset.game_id = game.game_id;
-	gameItem.dataset.title = game.game_title;
-	gameItem.dataset.platform = game.platform;
-	gameItem.dataset.genre = game.genre;
-	gameItem.dataset.release_year = game.release_year;
-	gameItem.dataset.developer = game.developer;
-	gameItem.dataset.publisher = game.publisher;
-	gameItem.dataset.franchise = game.franchise;
-	gameItem.dataset.series = game.series;
-	gameItem.dataset.game_note = game.game_note;
+		gameItem.classList.add('game-item');
+		gameItem.classList.add('row');
+		gameItem.classList.add('p-1');
 
-	// Build Dropdown Menu
-	dropDownDiv.classList.add('btn-group');
-	dropDownDiv.classList.add('dropleft');
-	dropDownDiv.classList.add('col');
+		indexSpan.classList.add('game-index');
+		indexSpan.classList.add('col-1');
+		indexSpan.classList.add('align-middle');
 
-	const ddButton = document.createElement('button');
-	ddButton.classList.add('btn');
-	ddButton.classList.add('btn-secondary');
-	ddButton.classList.add('dropdown-toggle');
-	ddButton.type = 'button';
-	ddButton.dataset.toggle = 'dropdown';
-	ddButton.setAttribute('aria-haspopup', 'true');
-	ddButton.setAttribute('aria-expanded', 'false');
+		nameSpan.classList.add('game-title');
+		nameSpan.classList.add('col-5');
+		nameSpan.classList.add('align-middle');
 
-	const ddItems = document.createElement('div');
-	ddItems.classList.add('dropdown-menu');
+		platformSpan.classList.add('game-subdata');
+		platformSpan.classList.add('platform');
+		platformSpan.classList.add('col');
+		platformSpan.classList.add('align-middle');
 
-	const edit = document.createElement('a');
-	edit.classList.add('dropdown-item');
-	edit.href = '#';
-	edit.textContent = 'Edit';
-	edit.addEventListener('click', async () => {
-		gameRecordWindow = await createGameRecordWindow(gameItem.dataset);
+		releaseYearSpan.classList.add('game-subdata');
+		releaseYearSpan.classList.add('release-year');
+		releaseYearSpan.classList.add('col');
+		releaseYearSpan.classList.add('align-middle');
+
+		indexSpan.textContent = index + 1;
+		nameSpan.textContent = game.game_title;
+		platformSpan.textContent = game.platform;
+		releaseYearSpan.textContent = game.release_year;
+
+		gameItem.dataset.game_id = game.game_id;
+		gameItem.dataset.title = game.game_title;
+		gameItem.dataset.platform = game.platform;
+		gameItem.dataset.genre = game.genre;
+		gameItem.dataset.release_year = game.release_year;
+		gameItem.dataset.developer = game.developer;
+		gameItem.dataset.publisher = game.publisher;
+		gameItem.dataset.franchise = game.franchise;
+		gameItem.dataset.series = game.series;
+		gameItem.dataset.game_note = game.game_note;
+
+		// Build Dropdown Menu
+		dropDownDiv.classList.add('btn-group');
+		dropDownDiv.classList.add('dropleft');
+		dropDownDiv.classList.add('col');
+
+		const ddButton = document.createElement('button');
+		ddButton.classList.add('btn');
+		ddButton.classList.add('btn-secondary');
+		ddButton.classList.add('dropdown-toggle');
+		ddButton.type = 'button';
+		ddButton.dataset.toggle = 'dropdown';
+		ddButton.setAttribute('aria-haspopup', 'true');
+		ddButton.setAttribute('aria-expanded', 'false');
+
+		const ddItems = document.createElement('div');
+		ddItems.classList.add('dropdown-menu');
+
+		const edit = document.createElement('a');
+		edit.classList.add('dropdown-item');
+		edit.href = '#';
+		edit.textContent = 'Edit';
+		edit.addEventListener('click', async () => {
+			gameRecordWindow = await createGameRecordWindow(gameItem.dataset);
+		});
+
+		const del = document.createElement('a');
+		del.classList.add('dropdown-item');
+		del.href = '#';
+		del.textContent = 'Delete';
+		del.addEventListener('click', () => {
+			console.log('Deleted');
+		});
+
+		dropDownDiv.append(ddButton);
+		ddItems.append(edit);
+		ddItems.append(del);
+		dropDownDiv.append(ddItems);
+
+		gameItem.append(indexSpan);
+		gameItem.append(nameSpan);
+		gameItem.append(platformSpan);
+		gameItem.append(releaseYearSpan);
+		gameItem.append(dropDownDiv);
+
+		card_body.append(gameItem);
 	});
 
-	const del = document.createElement('a');
-	del.classList.add('dropdown-item');
-	del.href = '#';
-	del.textContent = 'Delete';
-	del.addEventListener('click', () => {
-		console.log('Deleted');
-	});
+	card_header_h5.append(card_header_btn);
+	card_header_div.append(card_header_h5);
+	card.append(card_header_div);
 
-	dropDownDiv.append(ddButton);
-	ddItems.append(edit);
-	ddItems.append(del);
-	dropDownDiv.append(ddItems);
+	collapse_region.append(card_body);
+	card.append(collapse_region);
 
-	gameItem.append(indexSpan);
-	gameItem.append(nameSpan);
-	gameItem.append(platformSpan);
-	gameItem.append(releaseYearSpan);
-	gameItem.append(dropDownDiv);
-
-	gameList.append(gameItem);
+	gameList.append(card);
 });
 
 ipcRenderer.on('reloadWindowFlag', () => {

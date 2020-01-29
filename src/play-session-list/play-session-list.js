@@ -3,6 +3,7 @@ const {BrowserWindow} = require('electron').remote;
 const {ipcRenderer} = require('electron');
 const {DateTime} = require('luxon');
 const windowStateKeeper = require('electron-window-state');
+const _ = require('lodash');
 
 // DOM elements
 const createNew = document.querySelector('#create-new');
@@ -96,91 +97,132 @@ createNew.addEventListener('click', async () => {
 
 // Load selectors
 const playSessions = JSON.parse(window.localStorage.getItem('play-session-list'));
+const sortedSessions = _.reverse(_.sortBy(playSessions, 'start_date'));
+const groupedSessions = _.groupBy(sortedSessions, 'game_id.game_title');
 
-playSessions.forEach(sesh => {
-	const sessionItem = document.createElement('div');
-	const nameSpan = document.createElement('span');
-	const dateSpan = document.createElement('span');
-	const timePlayedSpan = document.createElement('span');
-	const dropDownDiv = document.createElement('div');
+_.each(groupedSessions, (value, key) => {
+	const card = document.createElement('div');
+	card.classList.add('card');
 
-	sessionItem.classList.add('session-item');
-	sessionItem.classList.add('row');
-	sessionItem.classList.add('p-1');
+	const card_header_div = document.createElement('card-header');
+	card_header_div.id = 'heading' + key.replace(/ /g, '');
 
-	dateSpan.classList.add('date-played');
-	dateSpan.classList.add('col-2');
-	dateSpan.classList.add('align-middle');
+	const card_header_h5 = document.createElement('h5');
+	card_header_h5.classList.add('mb-0');
 
-	nameSpan.classList.add('game-title');
-	nameSpan.classList.add('game-subdata');
-	nameSpan.classList.add('col-5');
-	nameSpan.classList.add('align-middle');
+	const card_header_btn = document.createElement('button');
+	card_header_btn.classList.add('btn');
+	card_header_btn.classList.add('btn-secondary');
+	card_header_btn.classList.add('btn-block');
+	card_header_btn.dataset.toggle = 'collapse';
+	card_header_btn.dataset.target = '#collapse' + key.replace(/ /g, '');
+	card_header_btn.setAttribute('aria-expanded', 'false');
+	card_header_btn.setAttribute('aria-controls', 'collapse' + key.replace(/ /g, ''));
+	card_header_btn.textContent = key;
 
-	timePlayedSpan.classList.add('time-played');
-	timePlayedSpan.classList.add('game-subdata');
-	timePlayedSpan.classList.add('col');
-	timePlayedSpan.classList.add('align-middle');
+	const collapse_region = document.createElement('div');
+	collapse_region.classList.add('collapse');
+	collapse_region.id = 'collapse' + key.replace(/ /g, '');
+	collapse_region.setAttribute('aria-labelledby', 'heading' + key.replace(/ /g, ''));
+	collapse_region.dataset.parent = '#accordion';
 
-	nameSpan.textContent = sesh.game_id.game_title;
+	const card_body = document.createElement('div');
+	card_body.classList.add('card-body');
 
-	sessionItem.dataset.session_id = sesh.gametime_id;
-	sessionItem.dataset.game_id = sesh.game_id.game_id;
-	sessionItem.dataset.note = sesh.note;
+	value.forEach(sesh => {
+		const sessionItem = document.createElement('div');
+		const nameSpan = document.createElement('span');
+		const dateSpan = document.createElement('span');
+		const timePlayedSpan = document.createElement('span');
+		const dropDownDiv = document.createElement('div');
 
-	const startDate = new Date(sesh.start_date).toISOString().slice(0, 19).replace('T', ' ');
-	const endDate = new Date(sesh.end_date).toISOString().slice(0, 19).replace('T', ' ');
+		sessionItem.classList.add('session-item');
+		sessionItem.classList.add('row');
+		sessionItem.classList.add('p-1');
 
-	dateSpan.textContent = DateTime.fromSQL(startDate).toLocaleString(DateTime.DATE_SHORT);
+		dateSpan.classList.add('date-played');
+		dateSpan.classList.add('col-3');
+		dateSpan.classList.add('align-middle');
 
-	const hours = Math.round(Math.abs(((DateTime.fromSQL(startDate) - DateTime.fromSQL(endDate)) / 3.6e6) * 100) + Number.EPSILON) / 100;
+		nameSpan.classList.add('game-title');
+		nameSpan.classList.add('game-subdata');
+		nameSpan.classList.add('col-5');
+		nameSpan.classList.add('align-middle');
 
-	timePlayedSpan.textContent = hours;
+		timePlayedSpan.classList.add('time-played');
+		timePlayedSpan.classList.add('game-subdata');
+		timePlayedSpan.classList.add('col-2');
+		timePlayedSpan.classList.add('align-middle');
 
-	// Build Dropdown Menu
-	dropDownDiv.classList.add('btn-group');
-	dropDownDiv.classList.add('dropleft');
-	dropDownDiv.classList.add('col');
+		nameSpan.textContent = sesh.game_id.game_title;
 
-	const ddButton = document.createElement('button');
-	ddButton.classList.add('btn');
-	ddButton.classList.add('btn-secondary');
-	ddButton.classList.add('dropdown-toggle');
-	ddButton.type = 'button';
-	ddButton.dataset.toggle = 'dropdown';
-	ddButton.setAttribute('aria-haspopup', 'true');
-	ddButton.setAttribute('aria-expanded', 'false');
+		sessionItem.dataset.session_id = sesh.gametime_id;
+		sessionItem.dataset.game_id = sesh.game_id.game_id;
+		sessionItem.dataset.note = sesh.note;
 
-	const ddItems = document.createElement('div');
-	ddItems.classList.add('dropdown-menu');
+		const startDate = DateTime.fromISO(sesh.start_date);
+		const endDate = DateTime.fromISO(sesh.end_date);
 
-	const edit = document.createElement('a');
-	edit.classList.add('dropdown-item');
-	edit.href = '#';
-	edit.textContent = 'Edit';
-	edit.addEventListener('click', async () => {
-		playSessionWindow = await createPlaySessionEditWindow(sessionItem.dataset);
+		dateSpan.textContent = startDate.toLocaleString(DateTime.DATE_SHORT);
+
+		const hours = Math.round(Math.abs(((startDate - endDate) / 3.6e6) * 100) + Number.EPSILON) / 100;
+
+		timePlayedSpan.textContent = hours;
+
+		// Build Dropdown Menu
+		dropDownDiv.classList.add('btn-group');
+		dropDownDiv.classList.add('dropleft');
+		dropDownDiv.classList.add('col-2');
+
+		const ddButton = document.createElement('button');
+		ddButton.classList.add('btn');
+		ddButton.classList.add('btn-secondary');
+		ddButton.classList.add('dropdown-toggle');
+		ddButton.type = 'button';
+		ddButton.dataset.toggle = 'dropdown';
+		ddButton.setAttribute('aria-haspopup', 'true');
+		ddButton.setAttribute('aria-expanded', 'false');
+
+		const ddItems = document.createElement('div');
+		ddItems.classList.add('dropdown-menu');
+
+		const edit = document.createElement('a');
+		edit.classList.add('dropdown-item');
+		edit.href = '#';
+		edit.textContent = 'Edit';
+		edit.addEventListener('click', async () => {
+			playSessionWindow = await createPlaySessionEditWindow(sessionItem.dataset);
+		});
+
+		const del = document.createElement('a');
+		del.classList.add('dropdown-item');
+		del.href = '#';
+		del.textContent = 'Delete';
+		del.addEventListener('click', async () => {
+			console.log('Deleted');
+		});
+
+		dropDownDiv.append(ddButton);
+		ddItems.append(edit);
+		ddItems.append(del);
+		dropDownDiv.append(ddItems);
+
+		sessionItem.append(dateSpan);
+		sessionItem.append(nameSpan);
+		sessionItem.append(timePlayedSpan);
+		sessionItem.append(dropDownDiv);
+
+		card_body.append(sessionItem);
 	});
 
-	const del = document.createElement('a');
-	del.classList.add('dropdown-item');
-	del.href = '#';
-	del.textContent = 'Delete';
-	del.addEventListener('click', async () => {
-		console.log('Deleted');
-	});
+	card_header_h5.append(card_header_btn);
+	card_header_div.append(card_header_h5);
+	card.append(card_header_div);
 
-	dropDownDiv.append(ddButton);
-	ddItems.append(edit);
-	ddItems.append(del);
-	dropDownDiv.append(ddItems);
+	collapse_region.append(card_body);
+	card.append(collapse_region);
 
-	sessionItem.append(dateSpan);
-	sessionItem.append(nameSpan);
-	sessionItem.append(timePlayedSpan);
-	sessionItem.append(dropDownDiv);
-
-	playSessionList.append(sessionItem);
+	playSessionList.append(card);
 });
 
 ipcRenderer.on('reloadWindowFlagSession', () => {

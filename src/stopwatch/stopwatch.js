@@ -1,3 +1,5 @@
+const {DateTime} = require('luxon');
+
 function Stopwatch(display, results) {
 	// Properties
 	this.running = false;
@@ -19,7 +21,7 @@ function Stopwatch(display, results) {
 		}
 
 		if (!this.startDate) {
-			this.startDate = Date.now();
+			this.startDate = DateTime.local();
 		}
 
 		if (!this.running) {
@@ -97,9 +99,9 @@ function Stopwatch(display, results) {
 		const sec = this.times[2];
 		const milli = this.times[3];
 
-		const runningTime =	(((((hour * 60) + min) * 60) + sec) * 1000) + milli;
+		/// const runningTime =	(((((hour * 60) + min) * 60) + sec) * 1000) + milli;
 
-		return this.startDate + runningTime;
+		return this.startDate.plus({hours: hour, minutes: min, seconds: sec, milliseconds: milli});
 	};
 
 	this.print();
