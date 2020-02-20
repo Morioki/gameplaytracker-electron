@@ -44,7 +44,7 @@ const createGameListWindow = async () => {
 		activeWindow = undefined;
 	});
 
-	await win.loadFile('./src/game-list/static/game-list.html');
+	await win.loadFile('./src/game-list/game-list.html');
 
 	state.manage(win);
 
@@ -79,7 +79,7 @@ const createPlaySessionListWindow = async () => {
 		activeWindow = undefined;
 	});
 
-	await win.loadFile('./src/play-session-list/static/play-session-list.html');
+	await win.loadFile('./src/play-session-list/play-session-list.html');
 
 	state.manage(win);
 
@@ -125,7 +125,7 @@ Mousetrap.bind('p', async () => {
 
 		result.sort((a, b) => (a.hours < b.hours) ? 1 : -1);
 
-		const topGames = result.splice(0, 6);
+		const topGames = result.splice(0, 11);
 
 		topGames.forEach(game => {
 			const gameItem = document.createElement('div');

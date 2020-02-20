@@ -38,7 +38,7 @@ const createGameRecordWindow = async gameItem => {
 		gameRecordWindow = undefined;
 	});
 
-	await win.loadFile('./src/game-record/static/game-record.html');
+	await win.loadFile('./src/game-record/game-record.html');
 
 	win.once('ready-to-show', () => {
 		if (typeof gameItem !== 'undefined') {

@@ -40,7 +40,7 @@ const createPlaySessionWindow = async () => {
 		playSessionWindow = undefined;
 	});
 
-	await win.loadFile('./src/play-session/static/play-session.html');
+	await win.loadFile('./src/play-session/play-session.html');
 
 	state.manage(win);
 
@@ -75,7 +75,7 @@ const createPlaySessionEditWindow = async data => {
 		playSessionWindow = undefined;
 	});
 
-	await win.loadFile('./src/play-session-edit/static/play-session-edit.html');
+	await win.loadFile('./src/play-session-edit/play-session-edit.html');
 
 	win.once('ready-to-show', () => {
 		if (typeof data !== 'undefined') {
