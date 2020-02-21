@@ -148,6 +148,7 @@ _.each(groupedSessions, (value, key) => {
 		nameSpan.classList.add('game-subdata');
 		nameSpan.classList.add('col-5');
 		nameSpan.classList.add('align-middle');
+		nameSpan.classList.add('text-truncate');
 
 		timePlayedSpan.classList.add('time-played');
 		timePlayedSpan.classList.add('game-subdata');

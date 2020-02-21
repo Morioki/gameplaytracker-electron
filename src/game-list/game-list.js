@@ -111,6 +111,7 @@ _.each(groupedGames, (value, key) => {
 		nameSpan.classList.add('game-title');
 		nameSpan.classList.add('col-5');
 		nameSpan.classList.add('align-middle');
+		nameSpan.classList.add('text-truncate');
 
 		platformSpan.classList.add('game-subdata');
 		platformSpan.classList.add('platform');

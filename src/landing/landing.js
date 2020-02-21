@@ -138,6 +138,7 @@ Mousetrap.bind('p', async () => {
 
 			nameSpan.classList.add('col-6');
 			nameSpan.classList.add('align-middle');
+			nameSpan.classList.add('text-truncate');
 
 			yearSpan.classList.add('col-3');
 			yearSpan.classList.add('align-middle');
