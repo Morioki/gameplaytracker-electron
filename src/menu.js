@@ -134,12 +134,6 @@ const otherTemplate = [
 	{
 		role: 'fileMenu',
 		submenu: [
-			// {
-			// 	label: 'Custom'
-			// },
-			// {
-			// 	type: 'separator'
-			// },
 			{
 				label: 'Settings',
 				accelerator: 'Control+,',

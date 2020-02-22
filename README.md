@@ -18,7 +18,7 @@ Build not yet available.
 
 **Windows**
 
-[**Download**](https://github.com/user/repo/releases/latest) the `.exe` file.
+[**Download**](https://github.com/Morioki/gameplaytracker-electron/releases/latest) the `.exe` file.
 
 
 ---

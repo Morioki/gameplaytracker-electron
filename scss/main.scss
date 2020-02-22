@@ -1,0 +1,14 @@
+$theme-colors: (
+    "primary": #110429,
+    "secondary": #41337a,
+    "success": #c2efeb,
+    "danger": #902923
+);
+
+$sizes: (
+    10: 10%,
+    15: 15%,
+    20: 20%
+);
+
+@import "../node_modules/bootstrap/scss/bootstrap";
