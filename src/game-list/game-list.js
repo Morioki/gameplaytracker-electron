@@ -91,61 +91,102 @@ _.each(groupedGames, (value, key) => {
 
 	const card_body = document.createElement('div');
 	card_body.classList.add('card-body');
+	card_body.classList.add('p-2');
 
+	const game_table = document.createElement('table');
+	game_table.classList.add('table');
+	game_table.classList.add('table-sm');
+	game_table.classList.add('table-hover');
+
+	// Table Header Begin
+	const table_head = document.createElement('thead');
+	const table_row = document.createElement('tr');
+	
+	const col_num = document.createElement('th');
+	col_num.scope = 'col';
+	col_num.classList.add('w-10');
+	col_num.textContent = '#';
+	table_row.append(col_num)
+
+	const col_name = document.createElement('th');
+	col_name.scope = 'col';
+	col_name.classList.add('w-50');
+	col_name.textContent = 'Name';
+	table_row.append(col_name);
+
+	const col_genre = document.createElement('th');
+	col_genre.scope = 'col';
+	col_genre.textContent = 'Genre';
+	col_genre.classList.add('w-15');
+	table_row.append(col_genre);
+
+	const col_year = document.createElement('th');
+	col_year.scope = 'col';
+	col_year.textContent = 'Year';
+	col_year.classList.add('w-15');
+	table_row.append(col_year);
+
+	const col_menu = document.createElement('th');
+	col_menu.scope = 'col';
+	// col_menu.classList.add('w-10');
+	table_row.append(col_menu);
+
+	table_head.append(table_row);
+	game_table.append(table_head);
+	// Table Header Eend
+
+	// Table Body Begin
+	const table_body = document.createElement('tbody');
+	
+	// Table Row Loop Being
 	value.forEach((game, index) => {
-		const gameItem = document.createElement('div');
-		const indexSpan = document.createElement('span');
-		const nameSpan = document.createElement('span');
-		const platformSpan = document.createElement('span');
-		const releaseYearSpan = document.createElement('span');
-		const dropDownDiv = document.createElement('div');
+		const game_item = document.createElement('tr');
+		const row_num = document.createElement('th');
+		const row_name = document.createElement('td');
+		const row_genre = document.createElement('td');
+		const row_year = document.createElement('td');
+		const row_dd = document.createElement('td');
 
-		gameItem.classList.add('game-item');
-		gameItem.classList.add('row');
-		gameItem.classList.add('p-1');
+		row_num.scope = 'row';
+		row_num.textContent = index + 1;
+		// row_num.classList.add('game-index');
+		row_num.classList.add('align-middle');
+		game_item.append(row_num);
 
-		indexSpan.classList.add('game-index');
-		indexSpan.classList.add('col-1');
-		indexSpan.classList.add('align-middle');
+		row_name.textContent = game.game_title;
+		// row_name.classList.add('game_title');
+		row_name.classList.add('align-middle');
+		row_name.classList.add('text-truncate');
+		game_item.append(row_name);
 
-		nameSpan.classList.add('game-title');
-		nameSpan.classList.add('col-5');
-		nameSpan.classList.add('align-middle');
-		nameSpan.classList.add('text-truncate');
+		row_genre.textContent = game.genre;
+		// row_genre.classList.add('platform');
+		row_genre.classList.add('align-middle');
+		row_genre.classList.add('text-truncate');
+		game_item.append(row_genre);
 
-		platformSpan.classList.add('game-subdata');
-		platformSpan.classList.add('platform');
-		platformSpan.classList.add('col');
-		platformSpan.classList.add('align-middle');
+		row_year.textContent = game.release_year;
+		// row_year.classList.add('platform');
+		row_year.classList.add('align-middle');
+		game_item.append(row_year);
 
-		releaseYearSpan.classList.add('game-subdata');
-		releaseYearSpan.classList.add('release-year');
-		releaseYearSpan.classList.add('col');
-		releaseYearSpan.classList.add('align-middle');
+		game_item.dataset.game_id = game.game_id;
+		game_item.dataset.title = game.game_title;
+		game_item.dataset.platform = game.platform;
+		game_item.dataset.genre = game.genre;
+		game_item.dataset.release_year = game.release_year;
+		game_item.dataset.developer = game.developer;
+		game_item.dataset.publisher = game.publisher;
+		game_item.dataset.franchise = game.franchise;
+		game_item.dataset.series = game.series;
+		game_item.dataset.game_note = game.game_note;
 
-		indexSpan.textContent = index + 1;
-		nameSpan.textContent = game.game_title;
-		platformSpan.textContent = game.platform;
-		releaseYearSpan.textContent = game.release_year;
-
-		gameItem.dataset.game_id = game.game_id;
-		gameItem.dataset.title = game.game_title;
-		gameItem.dataset.platform = game.platform;
-		gameItem.dataset.genre = game.genre;
-		gameItem.dataset.release_year = game.release_year;
-		gameItem.dataset.developer = game.developer;
-		gameItem.dataset.publisher = game.publisher;
-		gameItem.dataset.franchise = game.franchise;
-		gameItem.dataset.series = game.series;
-		gameItem.dataset.game_note = game.game_note;
-
-		// Build Dropdown Menu
-		dropDownDiv.classList.add('btn-group');
-		dropDownDiv.classList.add('dropleft');
-		dropDownDiv.classList.add('col');
+		row_dd.classList.add('btn-group');
+		row_dd.classList.add('dropleft')
 
 		const ddButton = document.createElement('button');
 		ddButton.classList.add('btn');
+		ddButton.classList.add('btn-sm');
 		ddButton.classList.add('btn-secondary');
 		ddButton.classList.add('dropdown-toggle');
 		ddButton.type = 'button';
@@ -161,7 +202,7 @@ _.each(groupedGames, (value, key) => {
 		edit.href = '#';
 		edit.textContent = 'Edit';
 		edit.addEventListener('click', async () => {
-			gameRecordWindow = await createGameRecordWindow(gameItem.dataset);
+			gameRecordWindow = await createGameRecordWindow(game_item.dataset);
 		});
 
 		const del = document.createElement('a');
@@ -172,19 +213,21 @@ _.each(groupedGames, (value, key) => {
 			console.log('Deleted');
 		});
 
-		dropDownDiv.append(ddButton);
+		row_dd.append(ddButton);
 		ddItems.append(edit);
 		ddItems.append(del);
-		dropDownDiv.append(ddItems);
+		row_dd.append(ddItems);
 
-		gameItem.append(indexSpan);
-		gameItem.append(nameSpan);
-		gameItem.append(platformSpan);
-		gameItem.append(releaseYearSpan);
-		gameItem.append(dropDownDiv);
+		game_item.append(row_dd);
 
-		card_body.append(gameItem);
+		table_body.append(game_item);
 	});
+	// Table Row Loop End
+
+	game_table.append(table_body);
+	// Table Body End
+
+	card_body.append(game_table);
 
 	card_header_h5.append(card_header_btn);
 	card_header_div.append(card_header_h5);

@@ -5,4 +5,10 @@ $theme-colors: (
     "danger": #902923
 );
 
+$sizes: (
+    10: 10%,
+    15: 15%,
+    20: 20%
+);
+
 @import "../node_modules/bootstrap/scss/bootstrap";
