@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css" />
+	<!-- Main CSS -->
+	<link rel="stylesheet" href="../static/css/main.css">
     <!-- Bootstrap Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script>let $ = require('jquery');</script>
@@ -13,7 +13,7 @@
     <script>require('bootstrap');</script>
     <title>Play Session</title>
 </head>
-<body>
+<body class="bg-light">
     <header></header>
     <main>
         <div class="container-flow">
@@ -60,7 +60,7 @@
                 </div>
             </div>
 
-            <div class="save row">
+            <div class="save row p-1">
                 <div class="col">
                     <button class="btn btn-success float-right" id="record-save">Save</button>
                 </div>
@@ -69,6 +69,6 @@
         </div>
     </main>
     <footer></footer>
-    <script>require('../play-session')</script>
+    <script>require('./play-session')</script>
 </body>
 </html>

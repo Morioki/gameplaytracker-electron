@@ -40,7 +40,7 @@ const createPlaySessionWindow = async () => {
 		playSessionWindow = undefined;
 	});
 
-	await win.loadFile('./src/play-session/static/play-session.html');
+	await win.loadFile('./src/play-session/play-session.html');
 
 	state.manage(win);
 
@@ -75,7 +75,7 @@ const createPlaySessionEditWindow = async data => {
 		playSessionWindow = undefined;
 	});
 
-	await win.loadFile('./src/play-session-edit/static/play-session-edit.html');
+	await win.loadFile('./src/play-session-edit/play-session-edit.html');
 
 	win.once('ready-to-show', () => {
 		if (typeof data !== 'undefined') {
@@ -128,54 +128,95 @@ _.each(groupedSessions, (value, key) => {
 
 	const card_body = document.createElement('div');
 	card_body.classList.add('card-body');
+	card_body.classList.add('p-2');
 
-	value.forEach(sesh => {
-		const sessionItem = document.createElement('div');
-		const nameSpan = document.createElement('span');
-		const dateSpan = document.createElement('span');
-		const timePlayedSpan = document.createElement('span');
-		const dropDownDiv = document.createElement('div');
+	const session_table = document.createElement('table');
+	session_table.classList.add('table');
+	session_table.classList.add('table-sm');
+	session_table.classList.add('table-hover');
 
-		sessionItem.classList.add('session-item');
-		sessionItem.classList.add('row');
-		sessionItem.classList.add('p-1');
+	// Table Header Begin
+	const table_head = document.createElement('thead');
+	const table_row = document.createElement('tr');
 
-		dateSpan.classList.add('date-played');
-		dateSpan.classList.add('col-3');
-		dateSpan.classList.add('align-middle');
+	const col_num = document.createElement('th');
+	col_num.scope = 'col';
+	col_num.classList.add('w-10');
+	col_num.textContent = '#';
+	table_row.append(col_num);
 
-		nameSpan.classList.add('game-title');
-		nameSpan.classList.add('game-subdata');
-		nameSpan.classList.add('col-5');
-		nameSpan.classList.add('align-middle');
+	const col_date = document.createElement('th');
+	col_date.scope = 'col';
+	col_date.classList.add('w-20');
+	col_date.textContent = 'Date';
+	table_row.append(col_date);
 
-		timePlayedSpan.classList.add('time-played');
-		timePlayedSpan.classList.add('game-subdata');
-		timePlayedSpan.classList.add('col-2');
-		timePlayedSpan.classList.add('align-middle');
+	const col_note = document.createElement('th');
+	col_note.scope = 'col';
+	col_note.classList.add('w-50');
+	col_note.textContent = 'Note';
+	table_row.append(col_note);
 
-		nameSpan.textContent = sesh.game_id.game_title;
+	const col_genre = document.createElement('th');
+	col_genre.scope = 'col';
+	col_genre.textContent = 'Time';
+	col_genre.classList.add('w-15');
+	table_row.append(col_genre);
 
-		sessionItem.dataset.session_id = sesh.gametime_id;
-		sessionItem.dataset.game_id = sesh.game_id.game_id;
-		sessionItem.dataset.note = sesh.note;
+	const col_menu = document.createElement('th');
+	col_menu.scope = 'col';
+	table_row.append(col_menu);
+
+	table_head.append(table_row);
+	session_table.append(table_head);
+	// Table Header Eend
+
+	// Table Body Begin
+	const table_body = document.createElement('tbody');
+
+	// Table Row Loop Being
+	value.forEach((sesh, index) => {
+		const session_item = document.createElement('tr');
+		const row_num = document.createElement('th');
+		const row_date = document.createElement('td');
+		const row_note = document.createElement('td');
+		const row_time = document.createElement('td');
+		const row_dd = document.createElement('td');
+
+		row_num.scope = 'row';
+		row_num.textContent = index + 1;
+		row_num.classList.add('align-middle');
+		session_item.append(row_num);
 
 		const startDate = DateTime.fromISO(sesh.start_date);
 		const endDate = DateTime.fromISO(sesh.end_date);
 
-		dateSpan.textContent = startDate.toLocaleString(DateTime.DATE_SHORT);
+		row_date.textContent = startDate.toLocaleString(DateTime.DATE_SHORT);
+		row_date.classList.add('align-middle');
+		session_item.append(row_date);
+
+		row_note.textContent = sesh.note;
+		row_note.classList.add('align-middle');
+		row_note.classList.add('text-truncate');
+		session_item.append(row_note);
 
 		const hours = Math.round(Math.abs(((startDate - endDate) / 3.6e6) * 100) + Number.EPSILON) / 100;
 
-		timePlayedSpan.textContent = hours;
+		row_time.textContent = hours;
+		row_time.classList.add('align-middle');
+		session_item.append(row_time);
+
+		session_item.dataset.session_id = sesh.gametime_id;
+		session_item.dataset.game_id = sesh.game_id.game_id;
+		session_item.dataset.note = sesh.note;
 
 		// Build Dropdown Menu
-		dropDownDiv.classList.add('btn-group');
-		dropDownDiv.classList.add('dropleft');
-		dropDownDiv.classList.add('col-2');
+		row_dd.classList.add('btn-group');
+		row_dd.classList.add('dropleft');
 
 		const ddButton = document.createElement('button');
 		ddButton.classList.add('btn');
+		ddButton.classList.add('btn-sm');
 		ddButton.classList.add('btn-secondary');
 		ddButton.classList.add('dropdown-toggle');
 		ddButton.type = 'button';
@@ -191,7 +232,7 @@ _.each(groupedSessions, (value, key) => {
 		edit.href = '#';
 		edit.textContent = 'Edit';
 		edit.addEventListener('click', async () => {
-			playSessionWindow = await createPlaySessionEditWindow(sessionItem.dataset);
+			playSessionWindow = await createPlaySessionEditWindow(session_item.dataset);
 		});
 
 		const del = document.createElement('a');
@@ -202,18 +243,21 @@ _.each(groupedSessions, (value, key) => {
 			console.log('Deleted');
 		});
 
-		dropDownDiv.append(ddButton);
+		row_dd.append(ddButton);
 		ddItems.append(edit);
 		ddItems.append(del);
-		dropDownDiv.append(ddItems);
+		row_dd.append(ddItems);
 
-		sessionItem.append(dateSpan);
-		sessionItem.append(nameSpan);
-		sessionItem.append(timePlayedSpan);
-		sessionItem.append(dropDownDiv);
+		session_item.append(row_dd);
 
-		card_body.append(sessionItem);
+		table_body.append(session_item);
 	});
+	// Table Row Loop End
+
+	session_table.append(table_body);
+	// Table Body End
+
+	card_body.append(session_table);
 
 	card_header_h5.append(card_header_btn);
 	card_header_div.append(card_header_h5);
