@@ -139,7 +139,7 @@ Mousetrap.bind('p', async () => {
 		const agg_col = document.createElement('th');
 		agg_col.colSpan	= 2;
 		agg_col.scope = 'col';
-		agg_col.textContent = 'Aggregate: By Game'
+		agg_col.textContent = 'Aggregate: By Game';
 		agg_col.classList.add('align-middle');
 		agg_row.append(agg_col);
 		table_head.append(agg_row);
@@ -175,12 +175,12 @@ Mousetrap.bind('p', async () => {
 		table_head.append(agg_row);
 
 		const table_row = document.createElement('tr');
-		
+
 		const col_num = document.createElement('th');
 		col_num.scope = 'col';
 		col_num.classList.add('w-10');
 		col_num.textContent = '#';
-		table_row.append(col_num)
+		table_row.append(col_num);
 
 		const col_name = document.createElement('th');
 		col_name.scope = 'col';
@@ -206,7 +206,7 @@ Mousetrap.bind('p', async () => {
 
 		// Table Body Begin
 		const table_body = document.createElement('tbody');
-		
+
 		// Table Row Loop Being
 		topGames.forEach((game, index) => {
 			const game_item = document.createElement('tr');

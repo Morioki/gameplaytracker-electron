@@ -143,7 +143,7 @@ _.each(groupedSessions, (value, key) => {
 	col_num.scope = 'col';
 	col_num.classList.add('w-10');
 	col_num.textContent = '#';
-	table_row.append(col_num)
+	table_row.append(col_num);
 
 	const col_date = document.createElement('th');
 	col_date.scope = 'col';
@@ -163,10 +163,8 @@ _.each(groupedSessions, (value, key) => {
 	col_genre.classList.add('w-15');
 	table_row.append(col_genre);
 
-
 	const col_menu = document.createElement('th');
 	col_menu.scope = 'col';
-	// col_menu.classList.add('w-10');
 	table_row.append(col_menu);
 
 	table_head.append(table_row);
@@ -187,7 +185,6 @@ _.each(groupedSessions, (value, key) => {
 
 		row_num.scope = 'row';
 		row_num.textContent = index + 1;
-		// row_num.classList.add('game-index');
 		row_num.classList.add('align-middle');
 		session_item.append(row_num);
 
@@ -204,7 +201,7 @@ _.each(groupedSessions, (value, key) => {
 		session_item.append(row_note);
 
 		const hours = Math.round(Math.abs(((startDate - endDate) / 3.6e6) * 100) + Number.EPSILON) / 100;
-		
+
 		row_time.textContent = hours;
 		row_time.classList.add('align-middle');
 		session_item.append(row_time);

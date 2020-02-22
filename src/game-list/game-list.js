@@ -101,12 +101,12 @@ _.each(groupedGames, (value, key) => {
 	// Table Header Begin
 	const table_head = document.createElement('thead');
 	const table_row = document.createElement('tr');
-	
+
 	const col_num = document.createElement('th');
 	col_num.scope = 'col';
 	col_num.classList.add('w-10');
 	col_num.textContent = '#';
-	table_row.append(col_num)
+	table_row.append(col_num);
 
 	const col_name = document.createElement('th');
 	col_name.scope = 'col';
@@ -128,7 +128,6 @@ _.each(groupedGames, (value, key) => {
 
 	const col_menu = document.createElement('th');
 	col_menu.scope = 'col';
-	// col_menu.classList.add('w-10');
 	table_row.append(col_menu);
 
 	table_head.append(table_row);
@@ -137,7 +136,7 @@ _.each(groupedGames, (value, key) => {
 
 	// Table Body Begin
 	const table_body = document.createElement('tbody');
-	
+
 	// Table Row Loop Being
 	value.forEach((game, index) => {
 		const game_item = document.createElement('tr');
@@ -149,24 +148,20 @@ _.each(groupedGames, (value, key) => {
 
 		row_num.scope = 'row';
 		row_num.textContent = index + 1;
-		// row_num.classList.add('game-index');
 		row_num.classList.add('align-middle');
 		game_item.append(row_num);
 
 		row_name.textContent = game.game_title;
-		// row_name.classList.add('game_title');
 		row_name.classList.add('align-middle');
 		row_name.classList.add('text-truncate');
 		game_item.append(row_name);
 
 		row_genre.textContent = game.genre;
-		// row_genre.classList.add('platform');
 		row_genre.classList.add('align-middle');
 		row_genre.classList.add('text-truncate');
 		game_item.append(row_genre);
 
 		row_year.textContent = game.release_year;
-		// row_year.classList.add('platform');
 		row_year.classList.add('align-middle');
 		game_item.append(row_year);
 
@@ -182,7 +177,7 @@ _.each(groupedGames, (value, key) => {
 		game_item.dataset.game_note = game.game_note;
 
 		row_dd.classList.add('btn-group');
-		row_dd.classList.add('dropleft')
+		row_dd.classList.add('dropleft');
 
 		const ddButton = document.createElement('button');
 		ddButton.classList.add('btn');
