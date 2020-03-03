@@ -10,10 +10,11 @@ const store = new Store();
 
 const mongoHost = store.get('databases.mongodb.host');
 const mongoPort = store.get('databases.mongodb.port');
+const mongodbName = store.get('databases.mongodb.db')
 const mongoUsername = store.get('databases.mongodb.username');
 const mongoPass = store.get('databases.mongodb.password');
 const mongoAuthSrc = store.get('databases.mongodb.authentication_source');
-const mongoURI = `mongodb://${mongoUsername}:${mongoPass}@${mongoHost}:${mongoPort}/gameplay_tracker_electron?authSource=${mongoAuthSrc}`;
+const mongoURI = `mongodb://${mongoUsername}:${mongoPass}@${mongoHost}:${mongoPort}/${mongodbName}?authSource=${mongoAuthSrc}`;
 
 mongoose.connect(mongoURI, {useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true, useCreateIndex: true});
 

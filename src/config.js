@@ -8,6 +8,7 @@ module.exports = new Store({
 			mongodb: {
 				host: 'localhost',
 				port: 27017,
+				db: 'test',
 				username: 'username',
 				password: 'password',
 				authentication_source: 'admin'
