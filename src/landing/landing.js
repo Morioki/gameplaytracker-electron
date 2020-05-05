@@ -86,6 +86,41 @@ const createPlaySessionListWindow = async () => {
 	return win;
 };
 
+const createTestWindow = async () => {
+	const state = windowStateKeeper({
+		defaultWidth: 600, defaultHeight: 800
+	});
+
+	const win = new BrowserWindow({
+		parent: require('electron').remote.getCurrentWindow(),
+		modal: true,
+		show: false,
+		x: state.x,
+		y: state.y,
+		width: state.width,
+		height: state.height,
+		minWidth: 300,
+		maxWidth: 2000,
+		maxHeight: 2000,
+		backgroundColor: '#DEDEDE',
+		webPreferences: {nodeIntegration: true}
+	});
+
+	win.once('ready-to-show', () => {
+		win.show();
+	});
+
+	win.once('closed', () => {
+		activeWindow = undefined;
+	});
+
+	await win.loadFile('./src/sw_test/sw_test.html');
+
+	state.manage(win);
+
+	return win;
+};
+
 Mousetrap.bind('g', async () => {
 	activeWindow = await createGameListWindow();
 
@@ -94,6 +129,12 @@ Mousetrap.bind('g', async () => {
 
 Mousetrap.bind('p', async () => {
 	activeWindow = await createPlaySessionListWindow();
+
+	return false;
+});
+
+Mousetrap.bind('t', async () => {
+	activeWindow = await createTestWindow();
 
 	return false;
 });
