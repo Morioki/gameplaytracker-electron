@@ -1,21 +1,26 @@
 const {DateTime} = require('luxon');
 
-function Stopwatch(display, results) {
-	// Properties
-	this.running = false;
-	this.display = display;
-	this.results = results;
-	this.laps = [];
+class Stopwatch {
+	constructor(display) {
+		this.running = false;
+		this.display = display;
+		this.laps = [];
+		this.times = [0, 0, 0, 0];
 
-	this.times = [0, 0, 0, 0];
+		this.print();
+	}
 
 	// Methods
-	this.reset = () => {
+	reset() {
 		this.times = [0, 0, 0, 0];
 		this.startDate = null;
-	};
+	}
 
-	this.start = () => {
+	start() {
+		if (this.running) {
+			return;
+		}
+
 		if (!this.time) {
 			this.time = performance.now();
 		}
@@ -28,35 +33,37 @@ function Stopwatch(display, results) {
 			this.running = true;
 			requestAnimationFrame(this.step.bind(this));
 		}
-	};
+	}
 
-	this.stop = () => {
+	stop() {
 		this.running = false;
 		this.time = null;
-	};
+	}
 
-	this.clear = () => {
-		clearChildren(this.results);
+	clear() {
+		/// clearChildren(this.results);
+
 		if (this.running) {
 			this.stop();
 		}
 
 		this.reset();
 		this.print();
-	};
+	}
 
-	this.step = timestamp => {
+	step(timestamp) {
 		if (!this.running) {
 			return;
 		}
 
 		this.calculate(timestamp);
+
 		this.time = timestamp;
 		this.print();
 		requestAnimationFrame(this.step.bind(this));
-	};
+	}
 
-	this.calculate = timestamp => {
+	calculate(timestamp) {
 		if (!this.time) {
 			return;
 		}
@@ -79,32 +86,28 @@ function Stopwatch(display, results) {
 			this.times[0] += 1;
 			this.times[1] -= 60;
 		}
-	};
+	}
 
-	this.print = () => {
+	print() {
 		this.display.textContent = this.format(this.times);
-	};
+	}
 
-	this.format = times => {
+	format(times) {
 		return `\
 			${pad0(times[0], 2)}:\
 			${pad0(times[1], 2)}:\
 			${pad0(times[2], 2)}.\
 			${pad0(Math.floor(times[3]), 2)}`;
-	};
+	}
 
-	this.calcEndDate = () => {
+	calcEndDate() {
 		const hour = this.times[0];
 		const min = this.times[1];
 		const sec = this.times[2];
 		const milli = this.times[3];
 
-		/// const runningTime =	(((((hour * 60) + min) * 60) + sec) * 1000) + milli;
-
 		return this.startDate.plus({hours: hour, minutes: min, seconds: sec, milliseconds: milli});
-	};
-
-	this.print();
+	}
 }
 
 function pad0(value, count) {
@@ -115,12 +118,6 @@ function pad0(value, count) {
 	}
 
 	return result;
-}
-
-function clearChildren(node) {
-	while (node.lastChild) {
-		node.removeChild(node.lastChild);
-	}
 }
 
 module.exports = Stopwatch;
