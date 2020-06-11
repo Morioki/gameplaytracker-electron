@@ -58,7 +58,8 @@
 		],
 		"rules": {
 			"camelcase": 0,
-			"new-cap": 0
+			"new-cap": 0,
+			"max-params": 0
 		}
 	},
 	"np": {
