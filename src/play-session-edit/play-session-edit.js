@@ -1,7 +1,6 @@
 const {ipcRenderer} = require('electron');
 const _ = require('lodash');
 
-// const dbConn = require('../db/db-connection');
 const PlaySession = require('../classes/playsession');
 
 // DOM Elements
@@ -57,8 +56,8 @@ ipcRenderer.on('dataForSessionEdit', (e, args) => {
 			args.seconds,
 			args.milliseconds
 		]
-	)
-	
+	);
+
 	gameSelector.value = ps.getSelectedGame();
 	sessionNote.value = ps.getNotes();
 
@@ -83,9 +82,9 @@ ipcRenderer.on('dataForSessionEdit', (e, args) => {
 	});
 
 	milliMod.addEventListener('change', () => {
-		 ps.setMillisecondModifier(Number(milliMod.value));
+		ps.setMillisecondModifier(Number(milliMod.value));
 	});
-		
+
 	recordSave.addEventListener('click', async () => {
 		if (ps.sw.running) {
 			return;
@@ -94,7 +93,7 @@ ipcRenderer.on('dataForSessionEdit', (e, args) => {
 		if (ps.getSelectedGame() === 0) {
 			return;
 		}
-		
+
 		await ps.saveSession();
 
 		setTimeout(() => {

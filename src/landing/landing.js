@@ -118,26 +118,25 @@ Mousetrap.bind('p', async () => {
 			let milli;
 			if (sesh.hours === undefined) {
 				let diff = Math.abs(endDate - startDate) / 1000;
-				// calculate hours
+
 				hr = Math.floor(diff / 3600) % 24;
 				diff -= hr * 3600;
 
-				// calculate minutes
 				min = Math.floor(diff / 60) % 60;
 				diff -= min * 60;
 
-				// calculate seconds
-				diff = diff * 1000;
+				diff *= 1000;
 				sec = Math.floor(diff / 1000) % 60;
 				diff -= sec * 1000;
-				
-				milli = Math.trunc(diff)
+
+				milli = Math.trunc(diff);
 			} else {
 				hr = sesh.hours;
 				min = sesh.minutes;
 				sec = sesh.seconds;
 				milli = sesh.milliseconds;
 			}
+
 			const totalMilli = (hr * 3.6e6) + (min * 60000) + (sec * 1000) + milli;
 			const hours = (Math.abs(((totalMilli) / 3.6e6) * 100) + Number.EPSILON) / 100;
 			if (!res[sesh.game_id.game_title]) {

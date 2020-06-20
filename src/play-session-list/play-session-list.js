@@ -198,27 +198,24 @@ _.each(groupedSessions, (value, key) => {
 		let milli;
 		if (sesh.hours === undefined) {
 			let diff = Math.abs(endDate - startDate) / 1000;
-			// calculate hours
+
 			hr = Math.floor(diff / 3600) % 24;
 			diff -= hr * 3600;
 
-			// calculate minutes
 			min = Math.floor(diff / 60) % 60;
 			diff -= min * 60;
 
-			// calculate seconds
-			diff = diff * 1000;
+			diff *= 1000;
 			sec = Math.floor(diff / 1000) % 60;
 			diff -= sec * 1000;
-			
-			milli = Math.trunc(diff)
+
+			milli = Math.trunc(diff);
 		} else {
 			hr = sesh.hours;
 			min = sesh.minutes;
 			sec = sesh.seconds;
 			milli = sesh.milliseconds;
 		}
-		
 
 		row_date.textContent = startDate.toLocaleString(DateTime.DATE_SHORT);
 		row_date.classList.add('align-middle');
@@ -243,7 +240,6 @@ _.each(groupedSessions, (value, key) => {
 		session_item.dataset.minutes = min;
 		session_item.dataset.seconds = sec;
 		session_item.dataset.milliseconds = milli;
-
 
 		// Build Dropdown Menu
 		row_dd.classList.add('btn-group');

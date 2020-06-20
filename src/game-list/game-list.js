@@ -24,7 +24,6 @@ const createGameRecordWindow = async gameItem => {
 		width: state.width,
 		height: state.height,
 		minWidth: 300,
-		minHeight: 360,
 		maxWidth: 1000,
 		minHeight: 400,
 		backgroundColor: '#DEDEDE',

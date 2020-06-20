@@ -38,26 +38,26 @@ class PlaySession {
 		let carryhours = 0;
 
 		// Append millisecond mod to milliseconds
-		finalmilliseconds = Math.floor(this.millisecondModifier + Number(this.sw.getSWData()['milliseconds']));
+		finalmilliseconds = Math.floor(this.millisecondModifier + Number(this.sw.getSWData().milliseconds));
 		carryseconds = Math.floor(finalmilliseconds / 1000);
 		finalmilliseconds %= 1000;
 
 		// Append seconds mod and carry over to seconds
-		finalseconds = Math.floor(this.secondModifier + carryseconds + Number(this.sw.getSWData()['seconds']));
+		finalseconds = Math.floor(this.secondModifier + carryseconds + Number(this.sw.getSWData().seconds));
 		carryminutes = Math.floor(finalseconds / 60);
 		finalseconds %= 60;
 
 		// Append minutes mod and carry over into minutes
-		finalminutes = Math.floor(this.minuteModifier + carryminutes + Number(this.sw.getSWData()['minutes']));
+		finalminutes = Math.floor(this.minuteModifier + carryminutes + Number(this.sw.getSWData().minutes));
 		carryhours = Math.floor(finalminutes / 60);
 		finalminutes %= 60;
 
 		// Append hour mod and hour carryover
-		finalhours = Math.floor(this.hourModifier + carryhours + Number(this.sw.getSWData()['hours']));
+		finalhours = Math.floor(this.hourModifier + carryhours + Number(this.sw.getSWData().hours));
 
 		// Save Record
 		this.sw.setSWTime(finalhours, finalminutes, finalseconds, finalmilliseconds);
-		
+
 		await dbConn.savePlaySession(this);
 		await dbConn.loadAllData();
 

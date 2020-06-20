@@ -97,17 +97,15 @@ const savePlaySession = async session => {
 		gametime_id: session.sessionId
 	};
 
-	console.log(session.sessionId)
-
 	const playSession = {
 		game_id,
 		user: user_id,
 		start_date: session.sw.startDate,
 		/// end_date: session.end_date,
-		hours: Number(session.sw.getSWData()['hours']),
-		minutes: Number(session.sw.getSWData()['minutes']),
-		seconds: Number(session.sw.getSWData()['seconds']),
-		milliseconds: Number(session.sw.getSWData()['milliseconds']),
+		hours: Number(session.sw.getSWData().hours),
+		minutes: Number(session.sw.getSWData().minutes),
+		seconds: Number(session.sw.getSWData().seconds),
+		milliseconds: Number(session.sw.getSWData().milliseconds),
 		note: session.notes
 	};
 
@@ -116,10 +114,10 @@ const savePlaySession = async session => {
 	} else {
 		const upPlaySession = {
 			game_id,
-			hours: Number(session.sw.getSWData()['hours']),
-			minutes: Number(session.sw.getSWData()['minutes']),
-			seconds: Number(session.sw.getSWData()['seconds']),
-			milliseconds: Number(session.sw.getSWData()['milliseconds']),
+			hours: Number(session.sw.getSWData().hours),
+			minutes: Number(session.sw.getSWData().minutes),
+			seconds: Number(session.sw.getSWData().seconds),
+			milliseconds: Number(session.sw.getSWData().milliseconds),
 			note: session.notes
 		};
 

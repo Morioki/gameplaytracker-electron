@@ -2,8 +2,6 @@
 const {ipcRenderer} = require('electron');
 const _ = require('lodash');
 
-const Stopwatch = require('../classes/stopwatch');
-const dbConn = require('../db/db-connection');
 const PlaySession = require('../classes/playsession');
 
 // DOM Elemenets
@@ -50,8 +48,8 @@ _.each(groupedGames, (value, key) => {
 
 // Build Play Session Object
 const ps = new PlaySession(
-	document.querySelector('.stopwatch')	
-)
+	document.querySelector('.stopwatch')
+);
 
 swStart.addEventListener('click', () => {
 	ps.sw.start();
@@ -86,9 +84,9 @@ secondMod.addEventListener('change', () => {
 });
 
 milliMod.addEventListener('change', () => {
-	 ps.setMillisecondModifier(Number(milliMod.value));
+	ps.setMillisecondModifier(Number(milliMod.value));
 });
-	
+
 recordSave.addEventListener('click', async () => {
 	if (ps.sw.running) {
 		return;
