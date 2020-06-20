@@ -6,7 +6,6 @@ const Stopwatch = require('../classes/stopwatch');
 const dbConn = require('../db/db-connection');
 const PlaySession = require('../classes/playsession');
 
-/// TODO Rebuild in same manner as edit page
 // DOM Elemenets
 const gameSelector = document.querySelector('#game-selector');
 const swStart = document.querySelector('#sw-start');
@@ -91,34 +90,19 @@ milliMod.addEventListener('change', () => {
 });
 	
 recordSave.addEventListener('click', async () => {
-	console.log(ps);
+	if (ps.sw.running) {
+		return;
+	}
+
+	if (ps.getSelectedGame() === 0) {
+		return;
+	}
+
+	await ps.saveSession();
+
+	setTimeout(() => {
+		const winId = require('electron').remote.getCurrentWindow().getParentWindow().webContents.id;
+		ipcRenderer.sendTo(winId, 'reloadWindowFlagSession', true);
+		require('electron').remote.getCurrentWindow().close();
+	}, 2000);
 });
-
-// TODO Renable Save Handler
-// Save Handler
-// recordSave.addEventListener('click', async () => {
-// 	if (sw.running) {
-// 		return;
-// 	}
-
-// 	if (gameSelector[gameSelector.selectedIndex].value === 0) {
-// 		return;
-// 	}
-
-// 	const playSession = {
-// 		game_id: gameSelector[gameSelector.selectedIndex].value,
-// 		user: 1,
-// 		start_date: sw.startDate.toISO(),
-// 		end_date: sw.calcEndDate().toISO(),
-// 		note: sessionNote.value
-// 	};
-
-// 	await dbConn.savePlaySession(playSession);
-// 	await dbConn.loadAllData();
-
-// 	setTimeout(() => {
-// 		const winId = require('electron').remote.getCurrentWindow().getParentWindow().webContents.id;
-// 		ipcRenderer.sendTo(winId, 'reloadWindowFlagSession', true);
-// 		require('electron').remote.getCurrentWindow().close();
-// 	}, 2000);
-// });
