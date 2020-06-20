@@ -40,7 +40,7 @@ const createPlaySessionWindow = async () => {
 		playSessionWindow = undefined;
 	});
 
-	await win.loadFile('./src/play-session/play-session.html');
+	await win.loadFile('./src/new-play-session/new-play-session.html');
 
 	state.manage(win);
 
@@ -61,6 +61,7 @@ const createPlaySessionEditWindow = async data => {
 		width: state.width,
 		height: state.height,
 		minWidth: 300,
+		minHeight: 360,
 		maxWidth: 600,
 		maxHeight: 600,
 		backgroundColor: '#DEDEDE',
@@ -191,6 +192,31 @@ _.each(groupedSessions, (value, key) => {
 		const startDate = DateTime.fromISO(sesh.start_date);
 		const endDate = DateTime.fromISO(sesh.end_date);
 
+		let hr;
+		let min;
+		let sec;
+		let milli;
+		if (sesh.hours === undefined) {
+			let diff = Math.abs(endDate - startDate) / 1000;
+
+			hr = Math.floor(diff / 3600) % 24;
+			diff -= hr * 3600;
+
+			min = Math.floor(diff / 60) % 60;
+			diff -= min * 60;
+
+			diff *= 1000;
+			sec = Math.floor(diff / 1000) % 60;
+			diff -= sec * 1000;
+
+			milli = Math.trunc(diff);
+		} else {
+			hr = sesh.hours;
+			min = sesh.minutes;
+			sec = sesh.seconds;
+			milli = sesh.milliseconds;
+		}
+
 		row_date.textContent = startDate.toLocaleString(DateTime.DATE_SHORT);
 		row_date.classList.add('align-middle');
 		session_item.append(row_date);
@@ -200,15 +226,20 @@ _.each(groupedSessions, (value, key) => {
 		row_note.classList.add('text-truncate');
 		session_item.append(row_note);
 
-		const hours = Math.round(Math.abs(((startDate - endDate) / 3.6e6) * 100) + Number.EPSILON) / 100;
+		const totalMilli = (hr * 3.6e6) + (min * 60000) + (sec * 1000) + milli;
+		const timePlayed = Math.round(Math.abs((totalMilli / 3.6e6) * 100) + Number.EPSILON) / 100;
 
-		row_time.textContent = hours;
+		row_time.textContent = timePlayed;
 		row_time.classList.add('align-middle');
 		session_item.append(row_time);
 
 		session_item.dataset.session_id = sesh.gametime_id;
 		session_item.dataset.game_id = sesh.game_id.game_id;
 		session_item.dataset.note = sesh.note;
+		session_item.dataset.hours = hr;
+		session_item.dataset.minutes = min;
+		session_item.dataset.seconds = sec;
+		session_item.dataset.milliseconds = milli;
 
 		// Build Dropdown Menu
 		row_dd.classList.add('btn-group');

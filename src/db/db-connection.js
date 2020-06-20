@@ -1,6 +1,7 @@
 'use strict';
 const mongoose = require('mongoose');
 const Store = require('electron-store');
+const {is} = require('electron-util');
 
 const Game = require('./models/game-model');
 const User = require('./models/user-model');
@@ -8,15 +9,36 @@ const GameTime = require('./models/gametime-model');
 
 const store = new Store();
 
-const mongoHost = store.get('databases.mongodb.host');
-const mongoPort = store.get('databases.mongodb.port');
-const mongodbName = store.get('databases.mongodb.db')
-const mongoUsername = store.get('databases.mongodb.username');
-const mongoPass = store.get('databases.mongodb.password');
-const mongoAuthSrc = store.get('databases.mongodb.authentication_source');
-const mongoURI = `mongodb://${mongoUsername}:${mongoPass}@${mongoHost}:${mongoPort}/${mongodbName}?authSource=${mongoAuthSrc}`;
+let mongoHost;
+let mongoPort;
+let mongodbName;
+let mongoUsername;
+let mongoPass;
+let mongoAuthSrc;
 
+if (is.development) {
+	mongoHost = store.get('databases.dev_mongodb.host');
+	mongoPort = store.get('databases.dev_mongodb.port');
+	mongodbName = store.get('databases.dev_mongodb.db');
+	mongoUsername = store.get('databases.dev_mongodb.username');
+	mongoPass = store.get('databases.dev_mongodb.password');
+	mongoAuthSrc = store.get('databases.dev_mongodb.authentication_source');
+} else {
+	mongoHost = store.get('databases.mongodb.host');
+	mongoPort = store.get('databases.mongodb.port');
+	mongodbName = store.get('databases.mongodb.db');
+	mongoUsername = store.get('databases.mongodb.username');
+	mongoPass = store.get('databases.mongodb.password');
+	mongoAuthSrc = store.get('databases.mongodb.authentication_source');
+}
+
+const mongoURI = `mongodb://${mongoUsername}:${mongoPass}@${mongoHost}:${mongoPort}/${mongodbName}?authSource=${mongoAuthSrc}`;
 mongoose.connect(mongoURI, {useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true, useCreateIndex: true});
+
+const getPlaySessionRecord = async sessionId => {
+	const playSession = await GameTime.findOne({gametime_id: sessionId}).populate('game_id').exec();
+	return playSession;
+};
 
 const getGameRecord = async gameId => {
 	const gameRecord = await Game.findOne({game_id: gameId}).exec();
@@ -69,26 +91,34 @@ const saveGameRecord = async game => {
 
 const savePlaySession = async session => {
 	const user_id = await getUserRecord(1);
-	const game_id = await getGameRecord(session.game_id);
+	const game_id = await getGameRecord(session.getSelectedGame());
 
 	const sessionFilter = {
-		gametime_id: session.play_session_id
+		gametime_id: session.sessionId
 	};
 
 	const playSession = {
 		game_id,
 		user: user_id,
-		start_date: session.start_date,
-		end_date: session.end_date,
-		note: session.note
+		start_date: session.sw.startDate,
+		/// end_date: session.end_date,
+		hours: Number(session.sw.getSWData().hours),
+		minutes: Number(session.sw.getSWData().minutes),
+		seconds: Number(session.sw.getSWData().seconds),
+		milliseconds: Number(session.sw.getSWData().milliseconds),
+		note: session.notes
 	};
 
-	if (typeof session.play_session_id === 'undefined') {
+	if (session.sessionId === 0) {
 		await GameTime(playSession).save();
 	} else {
 		const upPlaySession = {
 			game_id,
-			note: session.note
+			hours: Number(session.sw.getSWData().hours),
+			minutes: Number(session.sw.getSWData().minutes),
+			seconds: Number(session.sw.getSWData().seconds),
+			milliseconds: Number(session.sw.getSWData().milliseconds),
+			note: session.notes
 		};
 
 		await GameTime.findOneAndUpdate(sessionFilter, upPlaySession);
@@ -115,6 +145,7 @@ const loadAllData = async () => {
 	await loadAllPlaySessions();
 };
 
+module.exports.getPlaySessionRecord = getPlaySessionRecord;
 module.exports.loadAllGames = loadAllGames;
 module.exports.loadAllPlaySessions = loadAllPlaySessions;
 module.exports.saveGameRecord = saveGameRecord;

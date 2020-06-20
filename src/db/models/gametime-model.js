@@ -14,8 +14,12 @@ const gametimeSchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User'
 	},
+	hours: Number,
+	minutes: Number,
+	seconds: Number, 
+	milliseconds: Number,
 	start_date: Date,
-	end_date: Date,
+	end_date: Date, //! Depricated 
 	note: String
 }, {collection: 'gametime'});
 gametimeSchema.plugin(AutoIncrement, {id: 'gametime.gametime_id', inc_field: 'gametime_id', collection_name: 'sequences'});

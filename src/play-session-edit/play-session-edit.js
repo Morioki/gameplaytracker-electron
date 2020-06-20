@@ -1,20 +1,22 @@
 const {ipcRenderer} = require('electron');
 const _ = require('lodash');
 
-const dbConn = require('../db/db-connection');
+const PlaySession = require('../classes/playsession');
 
 // DOM Elements
 const gameSelector = document.querySelector('#game-selector');
 const sessionNote = document.querySelector('#session-note-value');
+const hourMod = document.querySelector('#hour-mod-value');
+const minuteMod = document.querySelector('#minute-mod-value');
+const secondMod = document.querySelector('#second-mod-value');
+const milliMod = document.querySelector('#milli-mod-value');
 const recordSave = document.querySelector('#record-save');
 
 const games = JSON.parse(window.localStorage.getItem('game-list'));
 const sortedGames = _.sortBy(games, 'game_title');
-
-let activeID;
-
 const groupedGames = _.groupBy(sortedGames, 'platform');
 
+// Build Game Dropdown
 _.each(groupedGames, (value, key) => {
 	const optionGroup = document.createElement('optgroup');
 	optionGroup.label = key;
@@ -40,30 +42,67 @@ _.each(groupedGames, (value, key) => {
 	gameSelector.append(optionGroup);
 });
 
+// Get Data from IPCRenderer
 ipcRenderer.on('dataForSessionEdit', (e, args) => {
-	gameSelector.value = args.game_id;
-	sessionNote.value = args.note;
-	activeID = args.session_id;
+	// Build Play Session Object
+	const ps = new PlaySession(
+		document.querySelector('.stopwatch'),
+		args.session_id,
+		args.game_id,
+		args.note,
+		[
+			args.hours,
+			args.minutes,
+			args.seconds,
+			args.milliseconds
+		]
+	);
+
+	gameSelector.value = ps.getSelectedGame();
+	sessionNote.value = ps.getNotes();
+
+	gameSelector.addEventListener('change', () => {
+		ps.setSelectedGame(gameSelector.value);
+	});
+
+	sessionNote.addEventListener('keyup', () => {
+		ps.setNotes(sessionNote.value);
+	});
+
+	hourMod.addEventListener('change', () => {
+		ps.setHourModifier(Number(hourMod.value));
+	});
+
+	minuteMod.addEventListener('change', () => {
+		ps.setMinuteModifier(Number(minuteMod.value));
+	});
+
+	secondMod.addEventListener('change', () => {
+		ps.setSecondModifier(Number(secondMod.value));
+	});
+
+	milliMod.addEventListener('change', () => {
+		ps.setMillisecondModifier(Number(milliMod.value));
+	});
+
+	recordSave.addEventListener('click', async () => {
+		if (ps.sw.running) {
+			return;
+		}
+
+		if (ps.getSelectedGame() === 0) {
+			return;
+		}
+
+		recordSave.disabled = true;
+
+		await ps.saveSession();
+
+		setTimeout(() => {
+			const winId = require('electron').remote.getCurrentWindow().getParentWindow().webContents.id;
+			ipcRenderer.sendTo(winId, 'reloadWindowFlagSession', true);
+			require('electron').remote.getCurrentWindow().close();
+		}, 2000);
+	});
 });
 
-// Save Handler
-recordSave.addEventListener('click', async () => {
-	if (gameSelector[gameSelector.selectedIndex].value === 0) {
-		return;
-	}
-
-	const playSession = {
-		play_session_id: activeID,
-		game_id: gameSelector[gameSelector.selectedIndex].value,
-		note: sessionNote.value
-	};
-
-	await dbConn.savePlaySession(playSession);
-	await dbConn.loadAllData();
-
-	setTimeout(() => {
-		const winId = require('electron').remote.getCurrentWindow().getParentWindow().webContents.id;
-		ipcRenderer.sendTo(winId, 'reloadWindowFlagSession', true);
-		require('electron').remote.getCurrentWindow().close();
-	}, 2000);
-});
