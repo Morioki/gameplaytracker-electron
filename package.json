@@ -2,7 +2,7 @@
 	"name": "gameplay-tracker",
 	"productName": "Gameplay Tracker",
 	"main": "main.js",
-	"version": "0.3.1",
+	"version": "0.4.1",
 	"description": "Gameplay Tracker",
 	"license": "MIT",
 	"repository": "https://github.com/Morioki/GameplayTracker",
