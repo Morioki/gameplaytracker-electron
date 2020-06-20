@@ -91,26 +91,36 @@ const saveGameRecord = async game => {
 
 const savePlaySession = async session => {
 	const user_id = await getUserRecord(1);
-	const game_id = await getGameRecord(session.game_id);
+	const game_id = await getGameRecord(session.getSelectedGame());
 
 	const sessionFilter = {
-		gametime_id: session.play_session_id
+		gametime_id: session.sessionId
 	};
+
+	console.log(session.sessionId)
 
 	const playSession = {
 		game_id,
 		user: user_id,
-		start_date: session.start_date,
-		end_date: session.end_date,
-		note: session.note
+		start_date: session.sw.startDate,
+		/// end_date: session.end_date,
+		hours: Number(session.sw.getSWData()['hours']),
+		minutes: Number(session.sw.getSWData()['minutes']),
+		seconds: Number(session.sw.getSWData()['seconds']),
+		milliseconds: Number(session.sw.getSWData()['milliseconds']),
+		note: session.notes
 	};
 
-	if (typeof session.play_session_id === 'undefined') {
+	if (session.sessionId === 0) {
 		await GameTime(playSession).save();
 	} else {
 		const upPlaySession = {
 			game_id,
-			note: session.note
+			hours: Number(session.sw.getSWData()['hours']),
+			minutes: Number(session.sw.getSWData()['minutes']),
+			seconds: Number(session.sw.getSWData()['seconds']),
+			milliseconds: Number(session.sw.getSWData()['milliseconds']),
+			note: session.notes
 		};
 
 		await GameTime.findOneAndUpdate(sessionFilter, upPlaySession);
