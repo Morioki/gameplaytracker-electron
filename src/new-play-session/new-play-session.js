@@ -96,6 +96,8 @@ recordSave.addEventListener('click', async () => {
 		return;
 	}
 
+	recordSave.disabled = true;
+
 	await ps.saveSession();
 
 	setTimeout(() => {

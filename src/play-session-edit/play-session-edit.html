@@ -57,7 +57,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">Hour</span>
                         </div>
-                        <input type="number" id="hour-mod-value" class="form-control">
+                        <input type="number" min="0" oninput="validity.valid||(value='');" id="hour-mod-value" class="form-control">
                     </div>
                 </div>
                 <div class="col-3">
@@ -65,7 +65,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">Minute</span>
                         </div>
-                        <input type="number" id="minute-mod-value" class="form-control">
+                        <input type="number" min="0" oninput="validity.valid||(value='');" id="minute-mod-value" class="form-control">
                     </div>
                 </div>
                 <div class="col-3">
@@ -73,7 +73,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">Second</span>
                         </div>
-                        <input type="number" id="second-mod-value" class="form-control">
+                        <input type="number" min="0" oninput="validity.valid||(value='');" id="second-mod-value" class="form-control">
                     </div>
                 </div>
                 <div class="col-3">
@@ -81,7 +81,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">Milli</span>
                         </div>
-                        <input type="number" id="milli-mod-value" class="form-control">
+                        <input type="number" min="0" oninput="validity.valid||(value='');" id="milli-mod-value" class="form-control">
                     </div>
                 </div>
             </div>
