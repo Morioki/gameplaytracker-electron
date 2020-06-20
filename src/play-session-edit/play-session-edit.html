@@ -30,12 +30,58 @@
                 </div>
             </div>
             <div class="row p-1">
+                <div class="stopwatch col display-3 text-center"></div>
+            </div>
+            <div class="row p-1">
                 <div class="col">
                     <div class="session-note input-group input-group-sm mb-1">
                         <div class="input-group-prepend">
                             <span class="input-group-text">Notes</span>
                         </div>
                         <textarea name="session-note-name" id="session-note-value" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TODO Add header for Modifiers -->
+            <!-- <div class="row p-1">
+                <div class="col">
+                    <p>
+                        Stopwatch Modifiers
+                    </p>
+                </div>
+            </div> -->
+            <div class="row p-1">
+                <div class="col-3">
+                    <div class="hour-mod input-group input-group-sm mb-1">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Hour</span>
+                        </div>
+                        <input type="number" id="hour-mod-value" class="form-control">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="minute-mod input-group input-group-sm mb-1">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Minute</span>
+                        </div>
+                        <input type="number" id="minute-mod-value" class="form-control">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="second-mod input-group input-group-sm mb-1">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Second</span>
+                        </div>
+                        <input type="number" id="second-mod-value" class="form-control">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="milli-mod input-group input-group-sm mb-1">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Milli</span>
+                        </div>
+                        <input type="number" id="milli-mod-value" class="form-control">
                     </div>
                 </div>
             </div>
