@@ -94,6 +94,8 @@ ipcRenderer.on('dataForSessionEdit', (e, args) => {
 			return;
 		}
 
+		recordSave.disabled = true;
+
 		await ps.saveSession();
 
 		setTimeout(() => {
