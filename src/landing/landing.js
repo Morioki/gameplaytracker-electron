@@ -18,7 +18,7 @@ Mousetrap.bind('up up down down left right left right b a enter', () => {
 
 const createGameListWindow = async () => {
 	const state = windowStateKeeper({
-		defaultWidth: 600, defaultHeight: 800
+		defaultWidth: 600, defaultHeight: 360
 	});
 
 	const win = new BrowserWindow({
@@ -30,6 +30,7 @@ const createGameListWindow = async () => {
 		width: state.width,
 		height: state.height,
 		minWidth: 300,
+		minHeight: 360,
 		maxWidth: 2000,
 		maxHeight: 2000,
 		backgroundColor: '#DEDEDE',
@@ -65,6 +66,7 @@ const createPlaySessionListWindow = async () => {
 		width: state.width,
 		height: state.height,
 		minWidth: 300,
+		minHeight: 360,
 		maxWidth: 2000,
 		maxHeight: 2000,
 		backgroundColor: '#DEDEDE',
@@ -86,41 +88,6 @@ const createPlaySessionListWindow = async () => {
 	return win;
 };
 
-const createTestWindow = async () => {
-	const state = windowStateKeeper({
-		defaultWidth: 600, defaultHeight: 800
-	});
-
-	const win = new BrowserWindow({
-		parent: require('electron').remote.getCurrentWindow(),
-		modal: true,
-		show: false,
-		x: state.x,
-		y: state.y,
-		width: state.width,
-		height: state.height,
-		minWidth: 300,
-		maxWidth: 2000,
-		maxHeight: 2000,
-		backgroundColor: '#DEDEDE',
-		webPreferences: {nodeIntegration: true}
-	});
-
-	win.once('ready-to-show', () => {
-		win.show();
-	});
-
-	win.once('closed', () => {
-		activeWindow = undefined;
-	});
-
-	await win.loadFile('./src/sw_test/sw_test.html');
-
-	state.manage(win);
-
-	return win;
-};
-
 Mousetrap.bind('g', async () => {
 	activeWindow = await createGameListWindow();
 
@@ -129,12 +96,6 @@ Mousetrap.bind('g', async () => {
 
 Mousetrap.bind('p', async () => {
 	activeWindow = await createPlaySessionListWindow();
-
-	return false;
-});
-
-Mousetrap.bind('t', async () => {
-	activeWindow = await createTestWindow();
 
 	return false;
 });
@@ -150,7 +111,35 @@ Mousetrap.bind('t', async () => {
 		playSessions.reduce((res, sesh) => {
 			const startDate = DateTime.fromISO(sesh.start_date);
 			const endDate = DateTime.fromISO(sesh.end_date);
-			const hours = (Math.abs(((startDate - endDate) / 3.6e6) * 100) + Number.EPSILON) / 100;
+
+			let hr;
+			let min;
+			let sec;
+			let milli;
+			if (sesh.hours === undefined) {
+				let diff = Math.abs(endDate - startDate) / 1000;
+				// calculate hours
+				hr = Math.floor(diff / 3600) % 24;
+				diff -= hr * 3600;
+
+				// calculate minutes
+				min = Math.floor(diff / 60) % 60;
+				diff -= min * 60;
+
+				// calculate seconds
+				diff = diff * 1000;
+				sec = Math.floor(diff / 1000) % 60;
+				diff -= sec * 1000;
+				
+				milli = Math.trunc(diff)
+			} else {
+				hr = sesh.hours;
+				min = sesh.minutes;
+				sec = sesh.seconds;
+				milli = sesh.milliseconds;
+			}
+			const totalMilli = (hr * 3.6e6) + (min * 60000) + (sec * 1000) + milli;
+			const hours = (Math.abs(((totalMilli) / 3.6e6) * 100) + Number.EPSILON) / 100;
 			if (!res[sesh.game_id.game_title]) {
 				res[sesh.game_id.game_title] = {
 					game_title: sesh.game_id.game_title,
@@ -166,7 +155,7 @@ Mousetrap.bind('t', async () => {
 
 		result.sort((a, b) => (a.hours < b.hours) ? 1 : -1);
 
-		const topGames = result.splice(0, 11);
+		const topGames = result.splice(0, 10);
 
 		const game_table = document.createElement('table');
 		game_table.classList.add('table');
