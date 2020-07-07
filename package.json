@@ -39,7 +39,7 @@
 	},
 	"devDependencies": {
 		"ava": "^2.4.0",
-		"electron": "^7.1.2",
+		"electron": "^7.2.4",
 		"electron-builder": "^21.2.0",
 		"np": "^5.0.3",
 		"spectron": "^9.0.0",
