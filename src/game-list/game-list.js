@@ -68,7 +68,7 @@ _.each(groupedGames, (value, key) => {
 	card.classList.add('card');
 
 	const card_header_div = document.createElement('card-header');
-	card_header_div.id = 'heading' + key.replace(/ /g, '');
+	card_header_div.id = 'heading' + key.replace(/ |:/gi, '');
 
 	const card_header_h5 = document.createElement('h5');
 	card_header_h5.classList.add('mb-0');
@@ -78,15 +78,15 @@ _.each(groupedGames, (value, key) => {
 	card_header_btn.classList.add('btn-secondary');
 	card_header_btn.classList.add('btn-block');
 	card_header_btn.dataset.toggle = 'collapse';
-	card_header_btn.dataset.target = '#collapse' + key.replace(/ /g, '');
+	card_header_btn.dataset.target = '#collapse' + key.replace(/ |:/gi, '');
 	card_header_btn.setAttribute('aria-expanded', 'false');
-	card_header_btn.setAttribute('aria-controls', 'collapse' + key.replace(/ /g, ''));
+	card_header_btn.setAttribute('aria-controls', 'collapse' + key.replace(/ |:/gi, ''));
 	card_header_btn.textContent = key;
 
 	const collapse_region = document.createElement('div');
 	collapse_region.classList.add('collapse');
 	collapse_region.id = 'collapse' + key.replace(/ /g, '');
-	collapse_region.setAttribute('aria-labelledby', 'heading' + key.replace(/ /g, ''));
+	collapse_region.setAttribute('aria-labelledby', 'heading' + key.replace(/ |:/gi, ''));
 	collapse_region.dataset.parent = '#accordion';
 
 	const card_body = document.createElement('div');

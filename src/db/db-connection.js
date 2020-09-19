@@ -15,6 +15,10 @@ let mongodbName;
 let mongoUsername;
 let mongoPass;
 let mongoAuthSrc;
+let mongoProtocol;
+let mongoAddlModifiers;
+
+let mongoURI;
 
 if (is.development) {
 	mongoHost = store.get('databases.dev_mongodb.host');
@@ -23,6 +27,15 @@ if (is.development) {
 	mongoUsername = store.get('databases.dev_mongodb.username');
 	mongoPass = store.get('databases.dev_mongodb.password');
 	mongoAuthSrc = store.get('databases.dev_mongodb.authentication_source');
+	mongoProtocol = store.get('databases.dev_mongodb.protocol');
+	mongoAddlModifiers = store.get('databases.dev_mongodb.additionalModifiers');
+
+	if(mongoProtocol.includes("srv")) {
+		mongoURI = `${mongoProtocol}${mongoUsername}:${mongoPass}@${mongoHost}/${mongodbName}?authSource=${mongoAuthSrc}&${mongoAddlModifiers}`;
+	} else {
+		mongoURI = `${mongoProtocol}${mongoUsername}:${mongoPass}@${mongoHost}:${mongoPort}/${mongodbName}?authSource=${mongoAuthSrc}&${mongoAddlModifiers}`;
+	}
+	
 } else {
 	mongoHost = store.get('databases.mongodb.host');
 	mongoPort = store.get('databases.mongodb.port');
@@ -30,9 +43,20 @@ if (is.development) {
 	mongoUsername = store.get('databases.mongodb.username');
 	mongoPass = store.get('databases.mongodb.password');
 	mongoAuthSrc = store.get('databases.mongodb.authentication_source');
+	mongoProtocol = store.get('databases.mongodb.protocol');
+	mongoAddlModifiers = store.get('databases.mongodb.additionalModifiers');
+
+	if(mongoProtocol.includes("srv")) {
+		mongoURI = `${mongoProtocol}${mongoUsername}:${mongoPass}@${mongoHost}/${mongodbName}?authSource=${mongoAuthSrc}&${mongoAddlModifiers}`;
+	} else {
+		mongoURI = `${mongoProtocol}${mongoUsername}:${mongoPass}@${mongoHost}:${mongoPort}/${mongodbName}?authSource=${mongoAuthSrc}&${mongoAddlModifiers}`;
+	}
 }
 
-const mongoURI = `mongodb://${mongoUsername}:${mongoPass}@${mongoHost}:${mongoPort}/${mongodbName}?authSource=${mongoAuthSrc}`;
+// const mongoURI = `${mongoProtocol}${mongoUsername}:${mongoPass}@${mongoHost}:${mongoPort}/${mongodbName}?authSource=${mongoAuthSrc}&${mongoAddlModifiers}`;
+// console.log(store.get('databases.dev_mongodb.additionalModifiers'))
+// console.log(mongoURI)
+
 mongoose.connect(mongoURI, {useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true, useCreateIndex: true});
 
 const getPlaySessionRecord = async sessionId => {
