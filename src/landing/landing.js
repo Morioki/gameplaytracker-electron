@@ -270,7 +270,7 @@ Mousetrap.bind('p', async () => {
 		// Table Body End
 
 		topGamesDOM.append(game_table);
-	}, 2000);
+	}, 5000);
 })();
 
 // Trash statement to prevent error
