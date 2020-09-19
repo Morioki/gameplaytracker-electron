@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="../static/css/main.css">
+    <!-- Bootstrap Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script>
+        let $ = require('jquery');
+    </script>
+    <script>
+        require('popper.js');
+    </script>
+    <script>
+        require('bootstrap');
+    </script>
+    <title>Play Session</title>
+</head>
+
+<body class="bg-light">
+    <header></header>
+    <main>
+        <div class="container-flow">
+            <div class="row p-1">
+                <div class="col">
+                    <div class="games input-group input-group-sm mb-1">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="game-selector">Game</label>
+                        </div>
+                        <select class="custom-select" id="game-selector">
+                            <option value="0"></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row p-1">
+                <div class="col">
+                    <div class="datepicker input-group input-group-sm mb-1">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Start</span>
+                        </div>
+                        <input id="manual-datepicker-value" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row p-1">
+                <div class="col">
+                    <div class="session-note input-group input-group-sm mb-1">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Notes</span>
+                        </div>
+                        <textarea name="session-note-name" id="session-note-value" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TODO Add header for Modifiers -->
+            <!-- <div class="row p-1">
+                <div class="col">
+                    <p>
+                        Stopwatch Modifiers
+                    </p>
+                </div>
+            </div> -->
+            <div class="row p-1">
+                <div class="col-3">
+                    <div class="hour-mod input-group input-group-sm mb-1">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Hour</span>
+                        </div>
+                        <input type="number" min="0" oninput="validity.valid||(value='');" id="hour-mod-value"
+                            class="form-control">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="minute-mod input-group input-group-sm mb-1">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Minute</span>
+                        </div>
+                        <input type="number" min="0" oninput="validity.valid||(value='');" id="minute-mod-value"
+                            class="form-control">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="second-mod input-group input-group-sm mb-1">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Second</span>
+                        </div>
+                        <input type="number" min="0" oninput="validity.valid||(value='');" id="second-mod-value"
+                            class="form-control">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="milli-mod input-group input-group-sm mb-1">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Milli</span>
+                        </div>
+                        <input type="number" min="0" oninput="validity.valid||(value='');" id="milli-mod-value"
+                            class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <div class="save row p-1">
+                <div class="col">
+                    <button class="btn btn-success float-right" id="record-save">Save</button>
+                </div>
+            </div>
+
+
+
+            <div class="stopwatch" style="display: none;"></div>
+        </div>
+    </main>
+    <footer></footer>
+    <script>
+        require('./manual-play-session')
+    </script>
+</body>
+
+</html>

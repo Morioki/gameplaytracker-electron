@@ -2,6 +2,7 @@
 const {BrowserWindow} = require('electron').remote;
 const {ipcRenderer} = require('electron');
 const {DateTime} = require('luxon');
+const Mousetrap = require('mousetrap');
 const windowStateKeeper = require('electron-window-state');
 const _ = require('lodash');
 
@@ -91,9 +92,59 @@ const createPlaySessionEditWindow = async data => {
 	return win;
 };
 
+const createManualPlaySessionWindow = async data => {
+	const state = windowStateKeeper({
+		defaultWidth: 600, defaultHeight: 600
+	});
+
+	const win = new BrowserWindow({
+		parent: require('electron').remote.getCurrentWindow(),
+		modal: true,
+		show: false,
+		x: state.x,
+		y: state.y,
+		width: state.width,
+		height: state.height,
+		minWidth: 300,
+		minHeight: 360,
+		maxWidth: 600,
+		maxHeight: 600,
+		backgroundColor: '#DEDEDE',
+		webPreferences: {nodeIntegration: true}
+	});
+
+	win.once('ready-to-show', () => {
+		win.show();
+	});
+
+	win.once('closed', () => {
+		playSessionWindow = undefined;
+	});
+
+	await win.loadFile('./src/manual-play-session/manual-play-session.html');
+
+	win.once('ready-to-show', () => {
+		if (typeof data !== 'undefined') {
+			ipcRenderer.sendTo(win.webContents.id, 'dataForSessionEdit', Object.assign({win}, data));
+		}
+
+		win.show();
+	});
+
+	state.manage(win);
+
+	return win;
+};
+
 // Launch new session window
 createNew.addEventListener('click', async () => {
 	playSessionWindow = await createPlaySessionWindow();
+});
+
+Mousetrap.bind('d', async () => {
+	playSessionWindow = await createManualPlaySessionWindow();
+
+	return false;
 });
 
 // Load selectors
@@ -106,7 +157,7 @@ _.each(groupedSessions, (value, key) => {
 	card.classList.add('card');
 
 	const card_header_div = document.createElement('card-header');
-	card_header_div.id = 'heading' + key.replace(/ /g, '');
+	card_header_div.id = 'heading' + key.replace(/ |:/gi, '');
 
 	const card_header_h5 = document.createElement('h5');
 	card_header_h5.classList.add('mb-0');
@@ -116,15 +167,15 @@ _.each(groupedSessions, (value, key) => {
 	card_header_btn.classList.add('btn-secondary');
 	card_header_btn.classList.add('btn-block');
 	card_header_btn.dataset.toggle = 'collapse';
-	card_header_btn.dataset.target = '#collapse' + key.replace(/ /g, '');
+	card_header_btn.dataset.target = '#collapse' + key.replace(/ |:/gi, '');
 	card_header_btn.setAttribute('aria-expanded', 'false');
-	card_header_btn.setAttribute('aria-controls', 'collapse' + key.replace(/ /g, ''));
+	card_header_btn.setAttribute('aria-controls', 'collapse' + key.replace(/ |:/gi, ''));
 	card_header_btn.textContent = key;
 
 	const collapse_region = document.createElement('div');
 	collapse_region.classList.add('collapse');
-	collapse_region.id = 'collapse' + key.replace(/ /g, '');
-	collapse_region.setAttribute('aria-labelledby', 'heading' + key.replace(/ /g, ''));
+	collapse_region.id = 'collapse' + key.replace(/ |:/gi, '');
+	collapse_region.setAttribute('aria-labelledby', 'heading' + key.replace(/ |:/gi, ''));
 	collapse_region.dataset.parent = '#accordion';
 
 	const card_body = document.createElement('div');
