@@ -11,7 +11,9 @@ module.exports = new Store({
 				db: 'test',
 				username: 'username',
 				password: 'password',
-				authentication_source: 'admin'
+				authentication_source: 'admin',
+				protocol: 'mongodb://',
+				additionalModifiers: ''
 			}
 		}
 	}
